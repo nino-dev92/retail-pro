@@ -73,8 +73,16 @@ export const findProductById = async (id: string) => {
 };
 
 export const addProduct = async (data: IProduct) => {
-  const { name, description, price, costPrice, quantity, createdBy, category } =
-    data;
+  const {
+    name,
+    description,
+    price,
+    costPrice,
+    quantity,
+    supplier,
+    createdBy,
+    category,
+  } = data;
 
   if (!createdBy || !category) throw new Error("Incomplete product details");
 
@@ -98,6 +106,7 @@ export const addProduct = async (data: IProduct) => {
     costPrice,
     quantity,
     sku,
+    supplier,
     createdBy,
     category,
   });

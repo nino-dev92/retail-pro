@@ -6,6 +6,7 @@ export interface IProduct extends Document {
   price: number;
   costPrice: number;
   quantity: number;
+  supplier: Types.ObjectId;
   isActive: boolean;
   sku: string;
   category: Types.ObjectId;
@@ -21,6 +22,7 @@ const productSchema: Schema = new mongoose.Schema<IProduct>(
     price: { type: Number, required: true, min: 1 },
     costPrice: { type: Number, required: true, min: 0 },
     quantity: { type: Number, required: true, default: 0, min: 0 },
+    supplier: { type: Schema.Types.ObjectId, ref: "Supplier", required: true },
     isActive: { type: Boolean, required: true, default: true },
     category: {
       type: Schema.Types.ObjectId,
