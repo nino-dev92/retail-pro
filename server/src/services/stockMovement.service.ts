@@ -9,7 +9,7 @@ type StockMovementDTO = {
   productId: string;
   actorId: string;
   quantity: number;
-  action: "ADD" | "REMOVE" | "SALE";
+  action: "ADD" | "REMOVE" | "SALE" | "REFUND";
   reason: string;
 };
 
@@ -59,7 +59,7 @@ export const createStockMovement = async (
       {
         product: productId,
         quantity,
-        action,
+        action: "SALE",
         actor: actorId,
         reason,
       },
@@ -87,6 +87,36 @@ export const getStockMovementById = async (id: string) => {
   const stockMovement = await StockMovement.findById(id);
 
   if (!stockMovement) throw new ApiError("Stock movement not found", 404);
+
+  return stockMovement;
+};
+
+export const addStockMovement = async (
+  data: StockMovementDTO,
+  session: mongoose.ClientSession,
+) => {
+  const { productId, actorId, quantity } = data;
+
+  const product = await Product.findById(productId).session(session);
+
+  if (!product) throw new ApiError("Product not found", 404);
+
+  product.quantity += quantity;
+
+  await product.save({ session });
+
+  const stockMovement = await StockMovement.create(
+    [
+      {
+        product: productId,
+        quantity,
+        actor: actorId,
+        action: "ADD",
+        reason: "Restock",
+      },
+    ],
+    { session },
+  );
 
   return stockMovement;
 };

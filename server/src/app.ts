@@ -15,6 +15,7 @@ import saleRoutes from "./routes/sale.route";
 import stockMovementRoutes from "./routes/stockMovement.route";
 import dashboardRoutes from "./routes/dashboard.routes";
 import supplierRoutes from "./routes/supplier.routes";
+import purchaseOrderRoutes from "./routes/purchaseOrder.route";
 
 const app = express();
 
@@ -32,6 +33,7 @@ app.use("/api/sales", saleRoutes);
 app.use("/api/stock-movement", stockMovementRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/supplier", supplierRoutes);
+app.use("/api/purchase-order", purchaseOrderRoutes);
 
 app.use(errorMiddleware);
 
