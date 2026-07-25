@@ -135,3 +135,24 @@ export const refundStockMovement = async (
 
   return product;
 };
+
+export const inventoryAdjustmentMovement = async (
+  data: any,
+  session: mongoose.ClientSession,
+) => {
+  const { productId, quantity, adjustmentType } = data;
+
+  const product = await Product.findById(productId).session(session);
+
+  if (!product) throw new ApiError("Product not found", 404);
+
+  if (adjustmentType === "INCREASE") {
+    product.quantity += quantity;
+  } else {
+    product.quantity -= quantity;
+  }
+
+  await product.save({ session });
+
+  return product;
+};

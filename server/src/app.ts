@@ -17,6 +17,7 @@ import dashboardRoutes from "./routes/dashboard.routes";
 import supplierRoutes from "./routes/supplier.routes";
 import purchaseOrderRoutes from "./routes/purchaseOrder.route";
 import refundRoutes from "./routes/refund.route";
+import inventoryAdjustmentRoutes from "./routes/inventoryAdjustment.route";
 
 const app = express();
 
@@ -36,6 +37,7 @@ app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/supplier", supplierRoutes);
 app.use("/api/purchase-order", purchaseOrderRoutes);
 app.use("/api/refund", refundRoutes);
+app.use("/api/feature-adjustments", inventoryAdjustmentRoutes);
 
 app.use(errorMiddleware);
 

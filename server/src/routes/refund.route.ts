@@ -16,7 +16,7 @@ router.get(
 );
 
 router.post(
-  "/create",
+  "/",
   verifyJWT,
   authorizeRole(ROLES.ADMIN, ROLES.MANAGER),
   validate(refundValidatorSchema),
