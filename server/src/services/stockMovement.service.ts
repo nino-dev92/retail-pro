@@ -120,3 +120,18 @@ export const addStockMovement = async (
 
   return stockMovement;
 };
+
+export const refundStockMovement = async (
+  data: any,
+  session: mongoose.ClientSession,
+) => {
+  const product = await Product.findById(data.productId).session(session);
+
+  if (!product) throw new ApiError("Product not found", 404);
+
+  product.quantity += data.quantity;
+
+  product.save({ session });
+
+  return product;
+};
