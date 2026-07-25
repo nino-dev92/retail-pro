@@ -24,9 +24,9 @@ export const viewAllSales = asyncHandler(
       Number(limit),
       from as string,
       to as string,
-      productId as string,
       Number(minTotal),
       Number(maxTotal),
+      productId as string,
     );
 
     res.status(200).json({

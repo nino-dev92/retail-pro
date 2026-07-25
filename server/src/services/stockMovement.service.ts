@@ -73,12 +73,30 @@ export const createStockMovement = async (
   };
 };
 
-export const getAllStockMovements = async () => {
+export const getAllStockMovements = async (
+  page = 1,
+  limit = 1,
+  from: string,
+  to: string,
+) => {
   const filter: any = {};
+  const skip = (page - 1) * 10;
 
-  const stockMovements = await StockMovement.find(filter).sort({
-    createdAt: -1,
-  });
+  if (from || to) {
+    if (from) {
+      filter.createdAt.$gte = new Date(from);
+    }
+    if (to) {
+      filter.createdAt.$lte = new Date(to);
+    }
+  }
+
+  const stockMovements = await StockMovement.find(filter)
+    .skip(skip)
+    .limit(limit)
+    .sort({
+      createdAt: -1,
+    });
 
   return stockMovements;
 };

@@ -20,14 +20,18 @@ export const addPurchaseOrder = asyncHandler(
 
 export const getAllPurchaseOrders = asyncHandler(
   async (req: Request, res: Response) => {
-    const search = (req.query.search as string) || "";
     const page = Number(req.query.page) > 0 ? Number(req.query.page) : 1;
     const limit = Number(req.query.limit) > 0 ? Number(req.query.page) : 10;
+    const from = req.query.from as string;
+    const to = req.query.to as string;
+    const supplier = req.query.supplier as string;
 
     const AllPurchaseOrders = await purchaseOrderService.findAllPurchaseOrders(
-      search,
       page,
       limit,
+      from,
+      to,
+      supplier,
     );
     res.status(200).json({
       success: true,

@@ -144,4 +144,6 @@ export const showAllRefunds = async (
     .skip(skip)
     .limit(limit)
     .sort({ createdAt: -1 });
+
+  return allrefunds;
 };

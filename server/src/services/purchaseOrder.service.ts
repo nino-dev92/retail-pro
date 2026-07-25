@@ -115,19 +115,14 @@ export const createPurchaseOrder = async (
 };
 
 export const findAllPurchaseOrders = async (
-  search = "",
   page = 1,
   limit = 10,
+  from: string,
+  to: string,
+  supplier: string,
 ) => {
   const filter: any = {};
   const skip = (page - 1) * limit;
-
-  if (search) {
-    filter.search = {
-      $regex: search,
-      $options: "i",
-    };
-  }
 
   const purchaseOrders = await PurchaseOrder.find(filter)
     .skip(skip)

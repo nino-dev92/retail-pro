@@ -124,9 +124,9 @@ export const getAllSales = async (
   limit = 10,
   from?: string,
   to?: string,
-  productId?: string,
   minTotal?: number,
   maxTotal?: number,
+  productId?: string,
 ) => {
   const skip = (page - 1) * limit;
 

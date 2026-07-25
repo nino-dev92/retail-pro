@@ -18,6 +18,7 @@ import supplierRoutes from "./routes/supplier.routes";
 import purchaseOrderRoutes from "./routes/purchaseOrder.route";
 import refundRoutes from "./routes/refund.route";
 import inventoryAdjustmentRoutes from "./routes/inventoryAdjustment.route";
+import reportRoutes from "./routes/report.route";
 
 const app = express();
 
@@ -38,6 +39,7 @@ app.use("/api/supplier", supplierRoutes);
 app.use("/api/purchase-order", purchaseOrderRoutes);
 app.use("/api/refund", refundRoutes);
 app.use("/api/feature-adjustments", inventoryAdjustmentRoutes);
+app.use("/api/reports", reportRoutes);
 
 app.use(errorMiddleware);
 
