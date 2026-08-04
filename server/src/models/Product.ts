@@ -28,7 +28,6 @@ const productSchema: Schema = new mongoose.Schema<IProduct>(
       type: Schema.Types.ObjectId,
       ref: "Category",
       required: true,
-      index: true,
     },
     createdBy: {
       type: Schema.Types.ObjectId,

@@ -20,7 +20,10 @@ export const allCategories = async (search?: string) => {
   return categories;
 };
 
-export const addCategory = async (data: ICategory) => {
+export const addCategory = async (data: {
+  name: string;
+  description: string;
+}) => {
   const { name, description } = data;
 
   const exists = await Category.findOne({
@@ -40,7 +43,7 @@ export const addCategory = async (data: ICategory) => {
 export const editCategory = async (id: string, data: Partial<ICategory>) => {
   const valid = Types.ObjectId.isValid(id);
 
-  if (!valid) throw new ApiError("Category not found", 404);
+  if (!valid) throw new ApiError("Invalid category", 404);
 
   const update = await Category.findByIdAndUpdate(id, data, { new: true });
 
@@ -49,14 +52,18 @@ export const editCategory = async (id: string, data: Partial<ICategory>) => {
   return update;
 };
 
-export const removeCategory = async (id: string, change: string) => {
+export const removeCategory = async (id: string, change: boolean) => {
   const valid = Types.ObjectId.isValid(id);
 
-  const value = change === "true" ? true : false;
+  if (!valid) throw new ApiError("Invalid category", 409);
 
-  if (!valid) throw new ApiError("Category not found", 404);
+  const update = await Category.findByIdAndUpdate(
+    id,
+    { isActive: change },
+    { new: true },
+  );
 
-  await Category.findByIdAndUpdate(id, { isActive: change });
+  if (!update) throw new ApiError("Category not found", 404);
 
-  return;
+  return update;
 };

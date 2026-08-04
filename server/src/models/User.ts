@@ -1,6 +1,8 @@
 import mongoose, { Schema, model, Document } from "mongoose";
 import { ROLES } from "../constants/roles";
 import bcrypt from "bcrypt";
+import dotenv from "dotenv";
+dotenv.config({ debug: true });
 
 interface IUser extends Document {
   firstName: string;

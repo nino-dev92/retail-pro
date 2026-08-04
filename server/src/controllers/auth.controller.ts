@@ -43,8 +43,8 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
 export const logout = (req: Request, res: Response) => {
   res.clearCookie("refreshToken", {
     httpOnly: true,
-    secure: true,
-    sameSite: "none",
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
   });
 
   res.status(200).json({ success: true, message: "Logged out successfully" });
@@ -55,7 +55,7 @@ export const refresh = asyncHandler(async (req: Request, res: Response) => {
 
   if (!token) throw new ApiError("Token not found", 401);
 
-  const accessToken = refreshTokenService(token);
+  const accessToken = await refreshTokenService(token);
 
   res.status(200).json({ success: true, accessToken });
 });

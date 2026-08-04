@@ -31,7 +31,7 @@ router.post(
 );
 
 router.patch(
-  "/id",
+  "/:id",
   verifyJWT,
   authorizeRole(ROLES.ADMIN, ROLES.MANAGER),
   supplierController.editSupplier,

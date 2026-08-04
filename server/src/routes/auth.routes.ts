@@ -4,9 +4,9 @@ import * as authController from "../controllers/auth.controller";
 import userValidationSchema from "../validators/auth.validator";
 import validate from "../middleware/validation.middleware";
 
-router.post("/signup", authController.signup);
+router.post("/signup", validate(userValidationSchema), authController.signup);
 
-router.post("/login", validate(userValidationSchema), authController.login);
+router.post("/login", authController.login);
 
 router.post("/logout", authController.logout);
 

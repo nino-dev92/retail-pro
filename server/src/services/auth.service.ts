@@ -5,6 +5,8 @@ import jwt from "jsonwebtoken";
 import { ROLES } from "../constants/roles";
 import ApiError from "../utils/apiError";
 import { generateAccessToken, generateRefreshToken } from "../utils/jwt";
+import dotenv from "dotenv";
+dotenv.config({ debug: true });
 
 type RegisterDTO = {
   firstName: string;
@@ -26,7 +28,7 @@ export const registerUser = async (data: RegisterDTO) => {
 
   const exists = await Users.findOne({ email });
 
-  if (exists) throw new ApiError("Email already exists", 409);
+  if (exists) throw new ApiError("User already exists", 409);
 
   const newUser = await Users.create({
     firstName,
@@ -42,7 +44,13 @@ export const registerUser = async (data: RegisterDTO) => {
   });
 
   return {
-    user: { firstName, lastName, email, role: newUser.role },
+    user: {
+      firstName,
+      lastName,
+      email,
+      role: newUser.role,
+      id: newUser._id.toString(),
+    },
     accessToken,
   };
 };
@@ -52,7 +60,7 @@ export const signIn = async (data: LoginDTO) => {
 
   const existingUser = await Users.findOne({ email }).select("+password");
 
-  if (!existingUser) throw new ApiError("Invalid Email or Password", 401);
+  if (!existingUser) throw new ApiError("User not found", 404);
 
   const validPassword = await bcrypt.compare(
     password,
@@ -93,27 +101,35 @@ export const signIn = async (data: LoginDTO) => {
 };
 
 export const refreshTokenService = async (refreshToken: string) => {
-  const decoded = jwt.verify(
-    refreshToken,
-    process.env.JWT_REFRESH_SECRET as string,
-  ) as JwtPayload;
+  let decoded: JwtPayload;
+
+  try {
+    decoded = jwt.verify(
+      refreshToken,
+      process.env.JWT_REFRESH_SECRET as string,
+    ) as JwtPayload;
+  } catch {
+    throw new ApiError("Unauthorized", 401);
+  }
 
   const user = await Users.findById(decoded.userId).select("+refreshToken");
 
-  if (!user) throw new ApiError("User not found", 401);
+  if (!user) {
+    throw new ApiError("User not found", 401);
+  }
 
-  if (!user.refreshToken) throw new ApiError("Unauthorized", 401);
+  if (!user.refreshToken) {
+    throw new ApiError("Unauthorized", 401);
+  }
 
-  const verifiedToken = await bcrypt.compare(refreshToken, user.refreshToken!);
+  const verifiedToken = await bcrypt.compare(refreshToken, user.refreshToken);
 
   if (!verifiedToken) {
     throw new ApiError("Unauthorized", 401);
   }
 
-  const accessToken = generateAccessToken({
+  return await generateAccessToken({
     userId: user._id.toString(),
     role: user.role,
   });
-
-  return accessToken;
 };

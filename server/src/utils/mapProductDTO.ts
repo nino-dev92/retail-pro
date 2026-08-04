@@ -18,4 +18,5 @@ export const mapProductDTO = (product: IProduct) => ({
   description: product.description,
   price: product.price,
   sku: product.sku,
+  isActive: product.isActive,
 });
