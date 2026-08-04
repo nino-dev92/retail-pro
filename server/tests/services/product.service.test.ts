@@ -500,7 +500,6 @@ describe("Product Service", () => {
     it("Should change product IsActive to false", async () => {
       const updateProduct: any = await productService.softDeleteProduct(
         product._id.toString(),
-        false,
       );
 
       expect(updateProduct).not.toBe(null);
@@ -509,17 +508,14 @@ describe("Product Service", () => {
 
     it("Should throw an error if product is not found", async () => {
       await expect(
-        productService.softDeleteProduct(
-          new Types.ObjectId().toString(),
-          false,
-        ),
+        productService.softDeleteProduct(new Types.ObjectId().toString()),
       ).rejects.toThrow("Product not found");
     });
 
     it("Should throw an error if productId is invalid", async () => {
-      await expect(
-        productService.softDeleteProduct("abc", false),
-      ).rejects.toThrow("Invalid product details");
+      await expect(productService.softDeleteProduct("abc")).rejects.toThrow(
+        "Invalid product details",
+      );
     });
   });
 });
