@@ -87,14 +87,9 @@ export const updateProductById = asyncHandler(
 
 export const deleteProductById = asyncHandler(
   async (req: Request, res: Response) => {
-    const id = req.params.id as string;
+    const id = req.params.id;
 
-    const update = req.body;
-
-    await productService.softDeleteProduct(
-      id,
-      update === "true" ? true : false,
-    );
+    await productService.softDeleteProduct(id as string);
 
     res.sendStatus(204);
   },

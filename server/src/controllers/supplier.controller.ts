@@ -64,7 +64,7 @@ export const editSupplier = asyncHandler(
 
 export const updateSupplierStatus = asyncHandler(
   async (req: Request, res: Response) => {
-    const { status } = req.body;
+    const status: boolean = req.body.status;
     const deactivated = await supplierService.updateSupplierStatus(
       req.params.id as string,
       status,

@@ -8,7 +8,6 @@ const productValidationSchema = joi.object({
   quantity: joi.number(),
   supplier: joi.string().required().min(3),
   isActive: joi.boolean(),
-  createdBy: joi.string().required(),
   category: joi.string().required(),
 });
 

@@ -16,7 +16,7 @@ const supplierSchema: Schema = new mongoose.Schema(
     phone: { type: Number, required: true },
     email: { type: String, required: true, unique: true },
     address: { type: String, required: true },
-    status: { type: Boolean, default: true },
+    active: { type: Boolean, default: true },
   },
   { timestamps: true },
 );

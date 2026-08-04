@@ -7,6 +7,19 @@ import genetateSKU from "../utils/generateSKU";
 import { mapProductDTO } from "../utils/mapProductDTO";
 import Category from "../models/Category";
 
+type CreateProductDTO = {
+  name: string;
+  sku: string;
+  description: string;
+  price: number;
+  costPrice: number;
+  quantity: number;
+  supplier: string;
+  category: string;
+  createdBy: string;
+  isActive?: boolean;
+};
+
 export const findAllProducts = async (
   page: number,
   limit: number,
@@ -67,12 +80,13 @@ export const findProductById = async (id: string) => {
 
   const product = await Products.findById(id);
 
-  if (!product) throw new ApiError("Product not found", 404);
+  if (!product || product === null)
+    throw new ApiError("Product not found", 404);
 
   return mapProductDTO(product);
 };
 
-export const addProduct = async (data: IProduct) => {
+export const addProduct = async (data: CreateProductDTO) => {
   const {
     name,
     description,
@@ -127,7 +141,17 @@ export const updateProduct = async (id: string, data: Partial<IProduct>) => {
   return mapProductDTO(product);
 };
 
-export const softDeleteProduct = async (id: string, update: boolean) => {
-  await Products.findByIdAndUpdate(id, { isActive: update });
-  return;
+export const softDeleteProduct = async (id: string) => {
+  if (!Types.ObjectId.isValid(id))
+    throw new ApiError("Invalid product details", 422);
+
+  const product = await Products.findByIdAndUpdate(
+    id,
+    { isActive: false },
+    { new: true },
+  );
+
+  if (!product) throw new ApiError("Product not found", 404);
+
+  return mapProductDTO(product);
 };

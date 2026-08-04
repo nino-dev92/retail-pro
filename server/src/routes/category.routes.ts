@@ -22,15 +22,13 @@ router.patch(
   "/:id",
   verifyJWT,
   authorizeRole(ROLES.ADMIN, ROLES.MANAGER),
-  validate(categoryValidationSchema),
   categoryController.updateCategory,
 );
 
 router.delete(
   "/:id",
   verifyJWT,
-  authorizeRole(ROLES.MANAGER),
-  validate(categoryValidationSchema),
+  authorizeRole(ROLES.MANAGER, ROLES.ADMIN),
   categoryController.deleteCategory,
 );
 
