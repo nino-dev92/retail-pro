@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
+import env from "./env";
 
-const dbURL = process.env.MONGO_URI;
+const dbURL = env.MONGO_URI.toString();
 
 if (!dbURL) {
   throw new Error("MONGO_URI is missing");
