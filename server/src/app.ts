@@ -9,6 +9,7 @@ import dotenv from "dotenv";
 dotenv.config({ debug: true });
 
 import errorMiddleware from "./middleware/error.middleware";
+import { apiLimiter } from "./middleware/rateLimiter";
 
 import authRoutes from "./routes/auth.routes";
 import productRoutes from "./routes/product.routes";
@@ -24,13 +25,13 @@ import reportRoutes from "./routes/report.route";
 
 const app = express();
 
-app.use(cors());
 app.use(helmet());
+app.use(cors());
+app.use(apiLimiter);
 app.use(morgan("dev"));
-app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+app.use(cookieParser());
 app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use("/api/auth", authRoutes);
