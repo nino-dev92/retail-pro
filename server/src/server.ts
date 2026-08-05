@@ -1,15 +1,15 @@
+import "dotenv/config";
 import app from "./app";
 import connectDB from "./config/db";
 import logger from "./logger/logger";
-
-const port = process.env.PORT || 3000;
+import env from "./config/env";
 
 const start = async () => {
   try {
     await connectDB();
 
-    app.listen(port, () => {
-      logger.info(`App is running on port ${port}`);
+    app.listen(env.PORT, () => {
+      logger.info(`App is running on port ${env.PORT}`);
     });
   } catch (error) {
     logger.error(error);

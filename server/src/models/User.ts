@@ -1,8 +1,7 @@
 import mongoose, { Schema, model, Document } from "mongoose";
 import { ROLES } from "../constants/roles";
 import bcrypt from "bcrypt";
-import dotenv from "dotenv";
-dotenv.config({ debug: true });
+import env from "../config/env";
 
 interface IUser extends Document {
   firstName: string;
@@ -34,7 +33,7 @@ const userSchema: Schema = new mongoose.Schema(
 );
 
 userSchema.pre("save", async function () {
-  const salt = parseInt(process.env.BCRYPT_SALT_ROUNDS as string);
+  const salt = env.BCRYPT_SALT_ROUNDS;
 
   if (!salt) throw new Error("BCRYPT_SALT_ROUNDS is missing");
 
