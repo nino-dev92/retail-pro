@@ -1,5 +1,6 @@
 import ApiError from "../utils/apiError";
 import { Request, Response, NextFunction } from "express";
+import logger from "../logger/logger";
 import Joi from "joi";
 import jwt from "jsonwebtoken";
 
@@ -9,7 +10,7 @@ const errorMiddleware = (
   res: Response,
   next: NextFunction,
 ) => {
-  console.error(err);
+  logger.error(err);
   if (err instanceof ApiError) {
     return res
       .status(err.statusCode)

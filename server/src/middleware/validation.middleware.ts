@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import joi from "joi";
+import logger from "../logger/logger";
 
 const validate = (schema: joi.ObjectSchema) => {
   return async (req: Request, res: Response, next: NextFunction) => {
@@ -8,6 +9,7 @@ const validate = (schema: joi.ObjectSchema) => {
 
       next();
     } catch (error) {
+      logger.error(error);
       next(error);
     }
   };
