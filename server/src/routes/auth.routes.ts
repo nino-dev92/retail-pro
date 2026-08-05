@@ -3,6 +3,7 @@ const router = express.Router();
 import * as authController from "../controllers/auth.controller";
 import userValidationSchema from "../validators/auth.validator";
 import validate from "../middleware/validation.middleware";
+import { authLimiter } from "../middleware/rateLimiter";
 
 /**
  * @swagger
@@ -80,7 +81,7 @@ router.post("/signup", validate(userValidationSchema), authController.signup);
  *         description: Invalid credentials
  */
 
-router.post("/login", authController.login);
+router.post("/login", authLimiter, authController.login);
 
 /**
  * @swagger
