@@ -6,6 +6,24 @@ import { ROLES } from "../constants/roles";
 
 const router = express.Router();
 
+/**
+ * @swagger
+ * /dashboard:
+ *   get:
+ *     summary: Get dashboard reports
+ *     tags:
+ *       - Dashboard
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: All dasjboard reports retrieved successfully
+ *       401:
+ *         description: Unauthorized
+ *       403:
+ *         description: Forbidden
+ */
+
 router.get(
   "/",
   verifyJWT,

@@ -3,6 +3,8 @@ import helmet from "helmet";
 import morgan from "morgan";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import swaggerUi from "swagger-ui-express";
+import swaggerSpec from "./config/swagger";
 import dotenv from "dotenv";
 dotenv.config({ debug: true });
 
@@ -29,6 +31,8 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/category", categoryRoutes);
@@ -38,7 +42,7 @@ app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/supplier", supplierRoutes);
 app.use("/api/purchase-order", purchaseOrderRoutes);
 app.use("/api/refund", refundRoutes);
-app.use("/api/feature-adjustments", inventoryAdjustmentRoutes);
+app.use("/api/inventory-adjustments", inventoryAdjustmentRoutes);
 app.use("/api/reports", reportRoutes);
 
 app.use(errorMiddleware);

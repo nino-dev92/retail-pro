@@ -8,6 +8,7 @@ const purchaseOrderValidationSchema = joi.object({
       quantity: joi.number().required(),
     }),
   ),
+  supplier: joi.string().required(),
 });
 
 export default purchaseOrderValidationSchema;
