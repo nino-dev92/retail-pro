@@ -1,11 +1,14 @@
 import { Request, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler";
 import * as saleService from "../services/sale.service";
+import logger from "../logger/logger";
 
 export const createSale = asyncHandler(async (req: Request, res: Response) => {
   const userId: string = req.user?.userId as string;
 
   const sale = await saleService.createSale(req.body, userId);
+
+  logger.info(`Sale created`);
 
   res.status(201).json({
     success: true,

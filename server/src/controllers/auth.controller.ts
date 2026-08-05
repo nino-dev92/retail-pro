@@ -6,9 +6,12 @@ import {
 } from "../services/auth.service";
 import { asyncHandler } from "../utils/asyncHandler";
 import ApiError from "../utils/apiError";
+import logger from "../logger/logger";
 
 export const signup = asyncHandler(async (req: Request, res: Response) => {
   const newUserData = await registerUser(req.body);
+
+  logger.info(`User ${newUserData.user.email} signed up`);
 
   res.status(201).json({
     success: true,
@@ -19,6 +22,10 @@ export const signup = asyncHandler(async (req: Request, res: Response) => {
 
 export const login = asyncHandler(async (req: Request, res: Response) => {
   const userData = await signIn(req.body);
+
+  logger.info(
+    `User ${userData.user.firstName} ${userData.user.lastName} logged in`,
+  );
 
   res.cookie("refreshToken", userData.refreshToken, {
     maxAge: 24 * 60 * 60 * 1000,

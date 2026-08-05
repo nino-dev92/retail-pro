@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler";
 import * as productService from "../services/product.service";
+import logger from "../logger/logger";
 
 export const createNewProduct = asyncHandler(
   async (req: Request, res: Response) => {
@@ -10,6 +11,8 @@ export const createNewProduct = asyncHandler(
     const productData = { ...data, createdBy: userId };
 
     const newProduct = await productService.addProduct(productData);
+
+    logger.info(`Product ${newProduct.name} created`);
 
     res.status(201).json({
       success: true,
