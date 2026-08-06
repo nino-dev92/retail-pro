@@ -10,6 +10,12 @@ const options: swaggerJsdoc.Options = {
       description: "Retail Pro Backend API",
     },
 
+    servers: [
+      {
+        url: "http://localhost:5000/api",
+      },
+    ],
+
     components: {
       securitySchemes: {
         bearerAuth: {
@@ -142,13 +148,9 @@ const options: swaggerJsdoc.Options = {
                 $ref: "#/components/schemas/SaleItem",
               },
             },
-            total: {
-              type: "number",
-              example: 600,
-            },
-            reason: {
+            paymentMethod: {
               type: "string",
-              example: "Damaged goods",
+              example: "CARD",
             },
           },
         },

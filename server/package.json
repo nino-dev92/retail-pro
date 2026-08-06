@@ -2,11 +2,10 @@
   "name": "sever",
   "version": "1.0.0",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "build": "tsc",
-    "start": "node dist/server.js",
+    "start": "node dist/src/server.js",
     "lint": "eslint .",
     "test": "jest",
     "test:watch": "jest --watch",
