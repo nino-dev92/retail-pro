@@ -10,6 +10,7 @@ dotenv.config({ debug: true });
 
 import errorMiddleware from "./middleware/error.middleware";
 import { apiLimiter } from "./middleware/rateLimiter";
+import requestId from "./middleware/requestId";
 
 import authRoutes from "./routes/auth.routes";
 import productRoutes from "./routes/product.routes";
@@ -28,6 +29,7 @@ const app = express();
 app.use(helmet());
 app.use(cors());
 app.use(apiLimiter);
+app.use(requestId);
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
