@@ -13,9 +13,9 @@ declare global {
 export {};
 
 export default (req: Request, res: Response, next: NextFunction) => {
-  req.requestId = uuid();
+  //   req.requestId = uuid();
 
-  res.setHeader("X-Request-ID", req.requestId);
+  //   res.setHeader("X-Request-ID", req.requestId);
 
   next();
 };
