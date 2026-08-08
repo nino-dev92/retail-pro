@@ -6,6 +6,7 @@ export default function Dashboard() {
 
   return (
     <>
+      <title>Dashboard</title>
       <div>Dashboard</div>
 
       <div>Welcome {auth.firstName.toUpperCase()}</div>

@@ -48,6 +48,8 @@ export default function Signup() {
 
   return (
     <>
+      <title>Sign Up</title>
+
       <Toaster position="top-right" richColors={true} />
       <Header />
       <main

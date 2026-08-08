@@ -7,7 +7,7 @@ import Footer from "../components/Footer";
 import { toast, Toaster } from "sonner";
 
 export default function Login() {
-  const { theme, auth, setAuth, setIsLoggedIn } = useAuth();
+  const { theme, auth, setAuth } = useAuth();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();
@@ -30,7 +30,6 @@ export default function Login() {
       setEmail("");
       setPassword("");
       toast.success("Login Successful");
-      setIsLoggedIn(true);
 
       setTimeout(() => {
         navigate("/dashboard");
@@ -42,6 +41,8 @@ export default function Login() {
 
   return (
     <>
+      <title>Login</title>
+
       <Toaster position="top-right" richColors={true} />
       <Header />
       <main
