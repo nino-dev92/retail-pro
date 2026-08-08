@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 export default function Footer() {
   return (
-    <footer className="bg-surface-container-low border-t border-outline-variant flat no shadows">
+    <footer className="bg-surface-container border-t border-outline-variant flat no shadows">
       <div className="flex flex-col md:flex-row justify-between items-center w-full px-margin-desktop py-gutter max-w-container-max mx-auto gap-6 md:gap-0">
         <div className="font-headline-md text-headline-md font-bold text-primary flex items-center gap-2">
           <span className="material-symbols-outlined">
