@@ -1,4 +1,4 @@
-import { useState, createContext } from "react";
+import { useState, createContext, useEffect } from "react";
 import React from "react";
 
 type AuthContextType = {
@@ -20,9 +20,17 @@ type AuthContextType = {
 export const AuthContext = createContext<AuthContextType | any>({});
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [auth, setAuth] = useState<AuthContextType | null>(null);
+  const [auth, setAuth] = useState<AuthContextType | null>(() => {
+    const storedAuth = localStorage.getItem("auth");
+    if (!storedAuth) return null;
+    return JSON.parse(storedAuth);
+  });
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [theme, setTheme] = useState<string>("light");
+
+  useEffect(() => {
+    console.log(auth);
+  }, [auth]);
 
   return (
     <AuthContext.Provider
