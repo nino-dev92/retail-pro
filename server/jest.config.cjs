@@ -5,6 +5,8 @@ module.exports = {
 
   roots: ["<rootDir>/tests"],
 
+  setupFiles: ["<rootDir>/tests/setup/env.ts"],
+
   setupFilesAfterEnv: ["<rootDir>/tests/setup/setup.ts"],
 
   clearMocks: true,
