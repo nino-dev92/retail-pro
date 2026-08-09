@@ -40,7 +40,7 @@ export default function Signup() {
 
       setTimeout(() => {
         navigate("/login");
-      }, 1000);
+      }, 500);
     } catch (error: any) {
       toast.error(error?.response?.data?.message);
     }

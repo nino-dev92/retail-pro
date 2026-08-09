@@ -11,8 +11,6 @@ type AuthContextType = {
     accessToken: string;
   };
   setAuth: React.SetStateAction<any>;
-  isLoggedIn: boolean;
-  setIsLoggedIn: React.SetStateAction<any>;
   theme: string;
   setTheme: React.SetStateAction<any>;
 };
@@ -25,17 +23,10 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (!storedAuth) return null;
     return JSON.parse(storedAuth);
   });
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [theme, setTheme] = useState<string>("light");
 
-  useEffect(() => {
-    console.log(auth);
-  }, [auth]);
-
   return (
-    <AuthContext.Provider
-      value={{ auth, setAuth, isLoggedIn, setIsLoggedIn, theme, setTheme }}
-    >
+    <AuthContext.Provider value={{ auth, setAuth, theme, setTheme }}>
       {children}
     </AuthContext.Provider>
   );

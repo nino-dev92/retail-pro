@@ -26,14 +26,14 @@ export default function Login() {
       const authResponse = response?.data?.data;
       setAuth(authResponse);
 
-      localStorage.setItem("auth", JSON.stringify(auth));
+      localStorage.setItem("auth", JSON.stringify(authResponse));
       setEmail("");
       setPassword("");
       toast.success("Login Successful");
 
       setTimeout(() => {
         navigate("/dashboard");
-      }, 1000);
+      }, 500);
     } catch (error: any) {
       toast.error(error.response?.data?.message);
     }
