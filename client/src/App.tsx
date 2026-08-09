@@ -3,8 +3,7 @@ import ScrollTop from "./utils/ScrollTop";
 import LandingPage from "./pages/LandingPage";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import Dashboard from "./pages/Dashboard";
-import ManagerRoute from "./utils/ManagerRoute";
+import Dashboard from "./pages/dashboard/Dashboard";
 import AuthRoute from "./utils/AuthRoute";
 
 function App() {
@@ -19,8 +18,6 @@ function App() {
       <Route element={<AuthRoute />}>
         <Route path="/dashboard" element={<Dashboard />} />
       </Route>
-
-      <Route element={<ManagerRoute />}></Route>
     </Routes>
   );
 }

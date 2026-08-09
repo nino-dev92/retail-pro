@@ -1,18 +1,24 @@
-import { useEffect, useState } from "react";
-import useAuth from "../hooks/useAuth";
-import Header from "../components/Header";
-import useAxiosPrivate from "../hooks/useAxiosPrivate";
-import Modal from "../components/Modal";
+import { useEffect, useState, useMemo } from "react";
+import useAuth from "../../hooks/useAuth";
+import Header from "../../components/Header";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import Modal from "../../components/ConfirmSaleModal";
 import { Toaster, toast } from "sonner";
-import apiAxios from "../api/apiAxios";
+import apiAxios from "../../api/apiAxios";
+import type { Product } from "../../types/product";
+import type { CartItem } from "../../types/cart";
+import type { Category } from "../../types/category";
 
-export default function Dashboard() {
+export default function CashierDashboard() {
   const { auth, theme } = useAuth();
   const api = useAxiosPrivate();
   const [search, setSearch] = useState<string>("");
-  const [cart, setCart] = useState<any[]>([]);
-  const [products, setProducts] = useState<any[]>([]);
-  const [categories, setCategories] = useState<any[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
+    null,
+  );
+  const [cart, setCart] = useState<CartItem[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [subtotal, setSubtotal] = useState<number>(0);
   const [total, setTotal] = useState<number>(0);
   const [paymentMethod, setPaymentMethod] = useState<string>("");
@@ -22,6 +28,25 @@ export default function Dashboard() {
   const salesTotal = todaySales.reduce((total, item) => {
     return total + item.total;
   }, 0);
+
+  const filteredProducts = useMemo(() => {
+    const query = search.trim().toLowerCase();
+
+    return products.filter((product) => {
+      // Search fields
+      const name = product.name?.toLowerCase() ?? "";
+      const sku = product.sku?.toLowerCase() ?? "";
+
+      const matchesSearch =
+        !query || name.includes(query) || sku.includes(query);
+
+      // Category filter
+      const matchesCategory =
+        !selectedCategory || product.category === selectedCategory._id;
+
+      return matchesSearch && matchesCategory;
+    });
+  }, [products, search, selectedCategory]);
 
   const getSales = async () => {
     try {
@@ -208,7 +233,7 @@ export default function Dashboard() {
                 <div className="p-4 md:p-6 border-b border-outline-variant bg-surface-bright flex flex-col gap-4">
                   <div className="flex flex-col sm:flex-row sm:items-center gap-3">
                     <label className="text-outline dark:text-surface text-lg shrink-0">
-                      Search
+                      Find a Product
                     </label>
 
                     <input
@@ -221,7 +246,15 @@ export default function Dashboard() {
                   </div>
 
                   <div className="flex gap-2 overflow-x-auto pb-2 items-center">
-                    <button className="whitespace-nowrap px-4 py-1.5 rounded-full bg-primary-container text-surface font-label-sm text-label-sm font-bold border border-transparent cursor-pointer">
+                    <button
+                      type="button"
+                      onClick={() => setSelectedCategory(null)}
+                      className={`whitespace-nowrap px-4 py-1.5 rounded-full font-label-sm text-label-sm font-bold border cursor-pointer transition-colors ${
+                        selectedCategory === null
+                          ? "bg-primary-container text-surface border-transparent"
+                          : "bg-surface text-on-surface-variant border-outline-variant hover:border-primary"
+                      }`}
+                    >
                       All Categories
                     </button>
 
@@ -231,8 +264,14 @@ export default function Dashboard() {
                       <div className="flex gap-2">
                         {categories.map((category) => (
                           <button
+                            type="button"
                             key={category._id}
-                            className="whitespace-nowrap px-4 py-1.5 rounded-full bg-surface text-on-surface-variant font-label-sm text-label-sm border border-outline-variant hover:border-primary transition-colors cursor-pointer"
+                            onClick={() => setSelectedCategory(category)}
+                            className={`whitespace-nowrap px-4 py-1.5 rounded-full font-label-sm text-label-sm border transition-colors cursor-pointer ${
+                              selectedCategory === category
+                                ? "bg-primary-container text-surface border-transparent font-bold"
+                                : "bg-surface text-on-surface-variant border-outline-variant hover:border-primary"
+                            }`}
                           >
                             {category.name}
                           </button>
@@ -244,59 +283,56 @@ export default function Dashboard() {
 
                 {/* Product Grid */}
                 <div className="flex-1 overflow-y-auto p-4 md:p-6 bg-background dark:bg-on-surface">
-                  <div
-                    className={`${
-                      products.length > 1 &&
-                      "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
-                    }`}
-                  >
-                    {products.length < 1 ? (
-                      <p className="text-xl text-center dark:text-surface justify-content-center">
-                        No products available
+                  {filteredProducts.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-16">
+                      <p className="text-lg font-semibold dark:text-surface">
+                        No products found
                       </p>
-                    ) : (
-                      <>
-                        {products.map((product) => (
-                          <div
-                            key={product.id}
-                            className="bg-surface dark:bg-primary border-outline-variant rounded p-4 hover:border-primary transition-all flex flex-col gap-3 group relative"
-                          >
-                            <div className="flex justify-between items-start">
-                              <span className="font-label-md text-label-md text-on-surface-variant bg-surface-container px-2 py-0.5 rounded">
-                                {product.sku}
-                              </span>
 
-                              <span className="font-label-sm text-label-sm text-tertiary bg-tertiary-fixed-dim bg-opacity-20 px-2 py-0.5 rounded">
-                                {product.quantity}
-                              </span>
-                            </div>
+                      <p className="text-sm text-on-surface-variant dark:text-surface">
+                        Try a different search or category.
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                      {filteredProducts.map((product) => (
+                        <div
+                          key={product._id}
+                          className="bg-surface dark:bg-primary border-outline-variant rounded p-4 hover:border-primary transition-all flex flex-col gap-3 group relative"
+                        >
+                          <div className="flex justify-between items-start">
+                            <span className="font-label-md text-label-md text-on-surface-variant bg-surface-container px-2 py-0.5 rounded">
+                              {product.sku}
+                            </span>
 
-                            <div>
-                              <h3 className="font-body-md text-body-md font-bold text-on-surface dark:text-surface line-clamp-2">
-                                {product.name}
-                              </h3>
-                            </div>
-
-                            <div className="mt-auto flex justify-between items-end pt-2 border-t border-surface-variant">
-                              <span className="font-headline-md text-headline-md font-bold text-primary dark:text-surface">
-                                N{product.price}
-                              </span>
-
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  addToCart(product);
-                                }}
-                                className="w-8 h-8 rounded px-10 bg-green-500 flex cursor-pointer items-center justify-center text-white active:scale-95 transition-colors"
-                              >
-                                add
-                              </button>
-                            </div>
+                            <span className="font-label-sm text-label-sm text-tertiary bg-tertiary-fixed-dim bg-opacity-20 px-2 py-0.5 rounded">
+                              {product.quantity}
+                            </span>
                           </div>
-                        ))}
-                      </>
-                    )}
-                  </div>
+
+                          <div>
+                            <h3 className="font-body-md text-body-md font-bold text-on-surface dark:text-surface line-clamp-2">
+                              {product.name}
+                            </h3>
+                          </div>
+
+                          <div className="mt-auto flex justify-between items-end pt-2 border-t border-surface-variant">
+                            <span className="font-headline-md text-headline-md font-bold text-primary dark:text-surface">
+                              N{product.price}
+                            </span>
+
+                            <button
+                              type="button"
+                              onClick={() => addToCart(product)}
+                              className="w-8 h-8 rounded px-10 bg-green-500 flex cursor-pointer items-center justify-center text-white active:scale-95 transition-colors"
+                            >
+                              add
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </section>
 
@@ -450,7 +486,12 @@ export default function Dashboard() {
                     </div>
                     <button
                       className="w-full mt-4 bg-primary text-on-primary py-4 rounded-lg font-bold hover:bg-primary-container transition-colors flex justify-center items-center gap-2 cursor-pointer active:scale-95"
-                      onClick={() => setIsModalOpen(true)}
+                      onClick={() => {
+                        if (cart.length < 1) {
+                          return toast.warning("Cart is empty");
+                        }
+                        setIsModalOpen(true);
+                      }}
                     >
                       Checkout
                     </button>

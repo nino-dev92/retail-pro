@@ -6,7 +6,7 @@ type ModalProps = {
   completeSale: () => void;
 };
 
-export default function Modal({
+export default function ConfirmSaleModal({
   isOpen,
   completeSale,
   setIsModalOpen,
