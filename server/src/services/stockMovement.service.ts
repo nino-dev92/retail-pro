@@ -19,36 +19,49 @@ export const createStockMovement = async (
 ) => {
   const { productId, reason, actorId, quantity, action } = data;
 
-  if (!Types.ObjectId.isValid(productId))
+  if (!Types.ObjectId.isValid(productId)) {
     throw new ApiError("Invalid product", 422);
+  }
 
-  if (!Types.ObjectId.isValid(actorId)) throw new ApiError("Invalid user", 409);
+  if (!Types.ObjectId.isValid(actorId)) {
+    throw new ApiError("Invalid user", 409);
+  }
+
+  if (!Number.isInteger(quantity) || quantity <= 0) {
+    throw new ApiError("Quantity must be a positive integer", 422);
+  }
 
   const product = await Product.findById(productId).session(session);
 
-  if (!product) throw new ApiError("Product not found", 404);
+  if (!product) {
+    throw new ApiError("Product not found", 404);
+  }
 
-  if (!product.isActive) throw new ApiError("Product not active", 400);
-
-  if (quantity <= 0)
-    throw new ApiError("Quantity must be greater than zero", 422);
+  if (!product.isActive) {
+    throw new ApiError("Product not active", 400);
+  }
 
   const user = await User.findById(actorId).session(session);
 
-  if (!user) throw new ApiError("User not found", 404);
+  if (!user) {
+    throw new ApiError("User not found", 404);
+  }
 
   const role = user.role;
 
-  if ((action === "ADD" || action === "REMOVE") && role === ROLES.CASHIER)
+  if ((action === "ADD" || action === "REMOVE") && role === ROLES.CASHIER) {
     throw new ApiError("Forbidden", 403);
+  }
 
-  if (action === "ADD") {
+  if (action === "ADD" || action === "REFUND") {
     product.quantity += quantity;
   }
 
   if (action === "REMOVE" || action === "SALE") {
-    if (product.quantity < quantity)
+    if (product.quantity < quantity) {
       throw new ApiError("Insufficient stock", 422);
+    }
+
     product.quantity -= quantity;
   }
 

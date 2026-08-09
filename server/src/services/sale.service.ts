@@ -83,7 +83,7 @@ export const createSale = async (data: CreateSaleDTO, userId: string) => {
         product: stockMovement.product._id,
         quantity: item.quantity,
         unitPrice: stockMovement.product.price,
-        unitCost: stockMovement.product.costPrice,
+        costPrice: stockMovement.product.costPrice,
         subtotal,
       });
 
@@ -98,6 +98,8 @@ export const createSale = async (data: CreateSaleDTO, userId: string) => {
           cashier: user._id,
           invoiceNum: `INV-${Date.now()}`,
           paymentMethod: data.paymentMethod,
+          status: "COMPLETED",
+          profit: totalProfit,
         },
       ],
       {

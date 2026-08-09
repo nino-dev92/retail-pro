@@ -115,6 +115,6 @@ router.post("/logout", authController.logout);
  *         description: Invalid refresh token
  */
 
-router.post("/refresh", authController.refresh);
+router.get("/refresh", authController.refresh);
 
 export default router;

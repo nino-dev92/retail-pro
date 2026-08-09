@@ -8,9 +8,12 @@ import swaggerSpec from "./config/swagger";
 import dotenv from "dotenv";
 dotenv.config({ debug: true });
 
+import corsOptions from "./config/corsOptions";
+
 import errorMiddleware from "./middleware/error.middleware";
 import { apiLimiter } from "./middleware/rateLimiter";
 import requestId from "./middleware/requestId";
+import credentials from "./middleware/credentials";
 
 import authRoutes from "./routes/auth.routes";
 import productRoutes from "./routes/product.routes";
@@ -27,7 +30,7 @@ import reportRoutes from "./routes/report.route";
 const app = express();
 
 app.use(helmet());
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(apiLimiter);
 app.use(requestId);
 app.use(morgan("dev"));
@@ -35,6 +38,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use(credentials);
 
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);

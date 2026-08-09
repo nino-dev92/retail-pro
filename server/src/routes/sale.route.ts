@@ -61,7 +61,7 @@ router.get(
 router.get(
   "/:id",
   verifyJWT,
-  authorizeRole(ROLES.ADMIN, ROLES.MANAGER),
+  authorizeRole(ROLES.CASHIER, ROLES.ADMIN, ROLES.MANAGER),
   saleController.viewSaleByCashierId,
 );
 
