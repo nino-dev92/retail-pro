@@ -94,7 +94,7 @@ export default function Header() {
         </header>
       )}
 
-      {/** Cashier Nav Nav */}
+      {/** Cashier Nav */}
       {auth && auth.role === "cashier" && (
         <header className="bg-surface  dark:bg-on-surface border-b border-outline-variant flex justify-between items-center w-full px-margin-desktop py-4 sticky top-0 z-50">
           <div className="flex items-center gap-8">
@@ -112,18 +112,87 @@ export default function Header() {
               {/* <!-- Assuming standard navigation for a dashboard app, adapting given JSON structure conceptually --> */}
               <Link
                 to="/dashboard"
-                className="text-on-surface-variant  dark:text-surface font-label-md text-label-md hover:text-primary transition-colors duration-200"
+                className="text-on-surface-variant dark:text-surface font-label-md text-label-md hover:text-primary transition-colors duration-200"
               >
                 Dashboard
               </Link>
               <NavLink
-                to="/addsale"
-                className="text-primary  dark:text-surface  border-b-2 border-primary font-bold pb-1 font-label-md text-label-md"
+                to="/dashboard"
+                className="text-primary dark:text-surface border-b-2 border-primary font-bold pb-1 font-label-md text-label-md"
               >
                 Add Sale
               </NavLink>
             </nav>
           </div>
+          <div className="flex items-center gap-4">
+            <button
+              title={
+                theme === "dark"
+                  ? "Change to Light mode"
+                  : "Change to dark mode"
+              }
+              className="cursor-pointer text-xl"
+              onClick={setThemeMode}
+            >
+              {theme === "dark" ? "☀️" : "🌑"}
+            </button>
+            <button
+              className="font-label-md  dark:text-surface dark:border-surface active:scale-95 cursor-pointer border px-4 py-2 rounded transition-colors flex items-center gap-2"
+              onClick={handleLogout}
+            >
+              <FaPowerOff /> Logout
+            </button>
+          </div>
+        </header>
+      )}
+      {/** Admin Nav */}
+      {auth && auth.role === "admin" && (
+        <header className="bg-surface dark:bg-on-surface border-b border-outline-variant flex justify-between items-center w-full px-margin-desktop py-4 sticky top-0 z-50">
+          <div className="flex items-center gap-8">
+            {/* Logo */}
+            <Link
+              to="/dashboard"
+              className="flex items-center gap-2 text-primary dark:text-surface font-semibold text-xl"
+            >
+              <span className="text-2xl">
+                <MdInventory />
+              </span>
+              <span>Retail Pro</span>
+            </Link>
+          </div>
+          <nav className="hidden md:flex gap-6 md:items-center">
+            {/* <!-- Assuming standard navigation for a dashboard app, adapting given JSON structure conceptually --> */}
+            <NavLink
+              to="/dashboard"
+              className="text-primary dark:text-surface font-bold font-label-md pb-1 hover:scale-105 transition-all"
+            >
+              Dashboard
+            </NavLink>
+            <NavLink
+              to="/users"
+              className="text-primary dark:text-surface font-bold font-label-md pb-1 hover:scale-105 transition-all"
+            >
+              Cashiers
+            </NavLink>
+            <NavLink
+              to="/products"
+              className="text-primary dark:text-surface font-bold font-label-md pb-1 hover:scale-105 transition-all"
+            >
+              Products
+            </NavLink>
+            <NavLink
+              to="/category"
+              className="text-primary dark:text-surface font-bold font-label-md pb-1 hover:scale-105 transition-all"
+            >
+              Categories
+            </NavLink>
+            <NavLink
+              to="/sales"
+              className="text-primary dark:text-surface font-bold b-2 font-label-md pb-1 hover:scale-105 transition-all"
+            >
+              Sales
+            </NavLink>
+          </nav>
           <div className="flex items-center gap-4">
             <button
               title={

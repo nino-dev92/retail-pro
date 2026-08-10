@@ -1,13 +1,14 @@
 import { useEffect, useState, useMemo } from "react";
-import useAuth from "../../hooks/useAuth";
-import Header from "../../components/Header";
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-import Modal from "../../components/ConfirmSaleModal";
+import useAuth from "../../../hooks/useAuth";
+import Header from "../../../components/Header";
+import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
+import ProductsGrid from "../../../components/product/ProductsGrid";
+import SummaryCard from "../../../components/product/SummaryCard";
+import ProductCategory from "../../../components/product/ProductCategory";
+import Modal from "../../../components/ConfirmSaleModal";
 import { Toaster, toast } from "sonner";
-import apiAxios from "../../api/apiAxios";
-import type { Product } from "../../types/product";
-import type { CartItem } from "../../types/cart";
-import type { Category } from "../../types/category";
+import type { Product, CartItem, Category } from "../../../types/types";
+import SearchBar from "../../../components/SearchBar";
 
 export default function CashierDashboard() {
   const { auth, theme } = useAuth();
@@ -24,7 +25,7 @@ export default function CashierDashboard() {
   const [paymentMethod, setPaymentMethod] = useState<string>("");
   const [todaySales, setTodaySales] = useState<any[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const lastTransaction = todaySales.at(-1);
+  //const lastTransaction = todaySales.at(-1);
   const salesTotal = todaySales.reduce((total, item) => {
     return total + item.total;
   }, 0);
@@ -50,7 +51,7 @@ export default function CashierDashboard() {
 
   const getSales = async () => {
     try {
-      const response = await apiAxios.get(`/sales/${auth.id}`);
+      const response = await api.get(`/sales/${auth.id}`);
       const salesData = response?.data?.data || [];
 
       const today = new Date();
@@ -113,7 +114,7 @@ export default function CashierDashboard() {
     setTotal(newSubtotal);
   }, [cart]);
 
-  const addToCart = (product: any) => {
+  const addToCart = (product: Product) => {
     setCart((prev) => {
       const existingProduct = prev.find(
         (item) => item.product._id === product._id,
@@ -181,7 +182,7 @@ export default function CashierDashboard() {
     };
 
     try {
-      const response = await apiAxios.post("/sales", saleItems);
+      const response = await api.post("/sales", saleItems);
 
       if (response.status === 201) {
         toast.success("Sale Successful");
@@ -220,10 +221,13 @@ export default function CashierDashboard() {
 
           {/* Main Workspace */}
           <main className={` ${isModalOpen && "blur-sm"} `}>
-            <div className="flex justify-end px-10 gap-gutter max-w-container-max mx-auto w-full">
+            <div className="flex justify-between items-center px-10 gap-gutter max-w-container-max mx-auto w-full">
               <p className="dark:text-surface pt-2">
                 <b className="text-lg">Welcome</b>{" "}
                 {auth.firstName.toUpperCase()} {auth.lastName.toUpperCase()}
+              </p>
+              <p className="dark:text-surface font-bold">
+                {new Date().toDateString()}
               </p>
             </div>
             <div className="flex-1 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden p-margin-mobile md:p-margin-desktop gap-gutter max-w-container-max mx-auto w-full gap-4">
@@ -236,138 +240,30 @@ export default function CashierDashboard() {
                       Find a Product
                     </label>
 
-                    <input
-                      className="w-full p-3 bg-surface border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary font-body-md text-body-md outline-none transition-all placeholder:text-on-surface-variant"
-                      placeholder="Search by SKU, Name, or Barcode..."
-                      type="text"
-                      value={search}
-                      onChange={(e) => setSearch(e.target.value)}
-                    />
+                    <SearchBar search={search} setSearch={setSearch} />
                   </div>
 
-                  <div className="flex gap-2 overflow-x-auto pb-2 items-center">
-                    <button
-                      type="button"
-                      onClick={() => setSelectedCategory(null)}
-                      className={`whitespace-nowrap px-4 py-1.5 rounded-full font-label-sm text-label-sm font-bold border cursor-pointer transition-colors ${
-                        selectedCategory === null
-                          ? "bg-primary-container text-surface border-transparent"
-                          : "bg-surface text-on-surface-variant border-outline-variant hover:border-primary"
-                      }`}
-                    >
-                      All Categories
-                    </button>
-
-                    {categories.length < 1 ? (
-                      <p className="dark:text-surface">No Category available</p>
-                    ) : (
-                      <div className="flex gap-2">
-                        {categories.map((category) => (
-                          <button
-                            type="button"
-                            key={category._id}
-                            onClick={() => setSelectedCategory(category)}
-                            className={`whitespace-nowrap px-4 py-1.5 rounded-full font-label-sm text-label-sm border transition-colors cursor-pointer ${
-                              selectedCategory === category
-                                ? "bg-primary-container text-surface border-transparent font-bold"
-                                : "bg-surface text-on-surface-variant border-outline-variant hover:border-primary"
-                            }`}
-                          >
-                            {category.name}
-                          </button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
+                  {/** Category component */}
+                  <ProductCategory
+                    categories={categories}
+                    selectedCategory={selectedCategory}
+                    setSelectedCategory={setSelectedCategory}
+                  />
                 </div>
 
                 {/* Product Grid */}
-                <div className="flex-1 overflow-y-auto p-4 md:p-6 bg-background dark:bg-on-surface">
-                  {filteredProducts.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-16">
-                      <p className="text-lg font-semibold dark:text-surface">
-                        No products found
-                      </p>
-
-                      <p className="text-sm text-on-surface-variant dark:text-surface">
-                        Try a different search or category.
-                      </p>
-                    </div>
-                  ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                      {filteredProducts.map((product) => (
-                        <div
-                          key={product._id}
-                          className="bg-surface dark:bg-primary border-outline-variant rounded p-4 hover:border-primary transition-all flex flex-col gap-3 group relative"
-                        >
-                          <div className="flex justify-between items-start">
-                            <span className="font-label-md text-label-md text-on-surface-variant bg-surface-container px-2 py-0.5 rounded">
-                              {product.sku}
-                            </span>
-
-                            <span className="font-label-sm text-label-sm text-tertiary bg-tertiary-fixed-dim bg-opacity-20 px-2 py-0.5 rounded">
-                              {product.quantity}
-                            </span>
-                          </div>
-
-                          <div>
-                            <h3 className="font-body-md text-body-md font-bold text-on-surface dark:text-surface line-clamp-2">
-                              {product.name}
-                            </h3>
-                          </div>
-
-                          <div className="mt-auto flex justify-between items-end pt-2 border-t border-surface-variant">
-                            <span className="font-headline-md text-headline-md font-bold text-primary dark:text-surface">
-                              N{product.price}
-                            </span>
-
-                            <button
-                              type="button"
-                              onClick={() => addToCart(product)}
-                              className="w-8 h-8 rounded px-10 bg-green-500 flex cursor-pointer items-center justify-center text-white active:scale-95 transition-colors"
-                            >
-                              add
-                            </button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
+                <ProductsGrid
+                  filteredProducts={filteredProducts}
+                  addToCart={addToCart}
+                />
               </section>
 
               {/* Right Column: Cart & Summary */}
               <section className="w-full lg:w-100 flex flex-col gap-6 shrink-0 min-h-150 lg:min-h-0">
                 {/* Context Summary Cards */}
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-surface dark:bg-primary border border-outline-variant rounded p-4 flex flex-col gap-1 text-center">
-                    <span className="font-label-sm text-label-sm text-on-surface-variant dark:text-surface uppercase tracking-wider">
-                      Today's Sales
-                    </span>
-
-                    <span className="font-headline-md text-headline-md font-bold text-primary dark:text-surface">
-                      N{salesTotal}
-                    </span>
-                  </div>
-
-                  <div className="bg-surface dark:bg-primary border border-outline-variant rounded p-4 flex flex-col gap-1 text-center">
-                    <span className="font-label-sm text-label-sm text-on-surface-variant dark:text-surface uppercase tracking-wider">
-                      Transactions
-                    </span>
-
-                    <span className="font-headline-md text-headline-md font-bold text-on-surface dark:text-surface">
-                      {todaySales.length}
-                    </span>
-
-                    <span className="font-label-sm text-label-sm text-on-surface-variant dark:text-surface">
-                      Last trans:{" "}
-                      {lastTransaction
-                        ? new Date(
-                            lastTransaction.createdAt,
-                          ).toLocaleTimeString()
-                        : "No transactions"}
-                    </span>
-                  </div>
+                  <SummaryCard title="Today's Sales" value={salesTotal} />
+                  <SummaryCard title="Transactions" value={todaySales.length} />
                 </div>
 
                 {/* Current Sale Cart */}
