@@ -2,7 +2,18 @@ import Product from "../models/Product";
 import Sale from "../models/Sale";
 import Category from "../models/Category";
 
+// Helper: safely convert MongoDB values to numbers
+const toNumber = (field: string) => ({
+  $convert: {
+    input: field,
+    to: "double",
+    onError: 0,
+    onNull: 0,
+  },
+});
+
 // DASHBOARD SUMMARY CARDS
+
 export const getDashboardStats = async () => {
   const startOfDay = new Date();
   startOfDay.setHours(0, 0, 0, 0);
@@ -57,17 +68,22 @@ export const getDashboardStats = async () => {
     }),
   ]);
 
+  // Calculate today's revenue safely
   let revenue = 0;
 
   todaySales.forEach((sale) => {
-    revenue += sale.total;
+    const saleTotal = Number(sale.total) || 0;
+    revenue += saleTotal;
   });
 
+  // Calculate today's items sold safely
   let itemsSold = 0;
 
   todaySales.forEach((sale) => {
+    if (!Array.isArray(sale.items)) return;
+
     sale.items.forEach((item) => {
-      itemsSold += item.quantity;
+      itemsSold += Number(item.quantity) || 0;
     });
   });
 
@@ -84,10 +100,13 @@ export const getDashboardStats = async () => {
   };
 };
 
-//  CHARTS
+// CHARTS
+
 export const getSalesByDay = async (days = 7) => {
   const startDate = new Date();
+
   startDate.setDate(startDate.getDate() - days);
+  startDate.setHours(0, 0, 0, 0);
 
   return await Sale.aggregate([
     {
@@ -97,6 +116,7 @@ export const getSalesByDay = async (days = 7) => {
         },
       },
     },
+
     {
       $group: {
         _id: {
@@ -105,19 +125,23 @@ export const getSalesByDay = async (days = 7) => {
             date: "$createdAt",
           },
         },
+
         revenue: {
-          $sum: "$total",
+          $sum: toNumber("$total"),
         },
+
         transactions: {
           $sum: 1,
         },
       },
     },
+
     {
       $sort: {
         _id: 1,
       },
     },
+
     {
       $project: {
         _id: 0,
@@ -128,6 +152,8 @@ export const getSalesByDay = async (days = 7) => {
     },
   ]);
 };
+
+// REVENUE BY MONTH
 
 export const getRevenueByMonth = async () => {
   const startDate = new Date();
@@ -144,6 +170,7 @@ export const getRevenueByMonth = async () => {
         },
       },
     },
+
     {
       $group: {
         _id: {
@@ -152,16 +179,19 @@ export const getRevenueByMonth = async () => {
             date: "$createdAt",
           },
         },
+
         revenue: {
-          $sum: "$total",
+          $sum: toNumber("$total"),
         },
       },
     },
+
     {
       $sort: {
         _id: 1,
       },
     },
+
     {
       $project: {
         _id: 0,
@@ -172,20 +202,25 @@ export const getRevenueByMonth = async () => {
   ]);
 };
 
-//   PRODUCT ANALYTICS
+// PRODUCT ANALYTICS
+
+// TOP SELLING PRODUCTS
 export const getTopSellingProducts = async () => {
   return await Sale.aggregate([
     {
       $unwind: "$items",
     },
+
     {
       $group: {
         _id: "$items.product",
+
         totalSold: {
-          $sum: "$items.quantity",
+          $sum: toNumber("$items.quantity"),
         },
       },
     },
+
     {
       $lookup: {
         from: "products",
@@ -194,17 +229,21 @@ export const getTopSellingProducts = async () => {
         as: "product",
       },
     },
+
     {
       $unwind: "$product",
     },
+
     {
       $sort: {
         totalSold: -1,
       },
     },
+
     {
       $limit: 5,
     },
+
     {
       $project: {
         _id: 0,
@@ -216,11 +255,13 @@ export const getTopSellingProducts = async () => {
   ]);
 };
 
+// REVENUE BY CATEGORY
 export const getRevenueByCategory = async () => {
   return await Sale.aggregate([
     {
       $unwind: "$items",
     },
+
     {
       $lookup: {
         from: "products",
@@ -229,9 +270,11 @@ export const getRevenueByCategory = async () => {
         as: "product",
       },
     },
+
     {
       $unwind: "$product",
     },
+
     {
       $lookup: {
         from: "categories",
@@ -240,22 +283,27 @@ export const getRevenueByCategory = async () => {
         as: "category",
       },
     },
+
     {
       $unwind: "$category",
     },
+
     {
       $group: {
         _id: "$category.name",
+
         revenue: {
-          $sum: "$items.subtotal",
+          $sum: toNumber("$items.subtotal"),
         },
       },
     },
+
     {
       $sort: {
         revenue: -1,
       },
     },
+
     {
       $project: {
         _id: 0,
@@ -266,7 +314,8 @@ export const getRevenueByCategory = async () => {
   ]);
 };
 
-//  INVENTORY ANALYTICS
+// INVENTORY ANALYTICS
+
 export const getInventoryValue = async () => {
   return await Product.aggregate([
     {
@@ -274,16 +323,19 @@ export const getInventoryValue = async () => {
         isActive: true,
       },
     },
+
     {
       $group: {
         _id: null,
+
         totalInventory: {
           $sum: {
-            $multiply: ["$price", "$quantity"],
+            $multiply: [toNumber("$price"), toNumber("$quantity")],
           },
         },
       },
     },
+
     {
       $project: {
         _id: 0,
@@ -293,7 +345,8 @@ export const getInventoryValue = async () => {
   ]);
 };
 
-//MAIN DASHBOARD
+// MAIN DASHBOARD
+
 export const getDashboard = async () => {
   const [
     stats,

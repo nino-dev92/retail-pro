@@ -13,6 +13,8 @@ type AuthContextType = {
   setAuth: React.SetStateAction<any>;
   theme: string;
   setTheme: React.SetStateAction<any>;
+  isLoading: boolean;
+  setIsLoading: React.SetStateAction<any>;
 };
 
 export const AuthContext = createContext<AuthContextType | any>({});
@@ -23,10 +25,18 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (!storedAuth) return null;
     return JSON.parse(storedAuth);
   });
-  const [theme, setTheme] = useState<string>("light");
+
+  const [theme, setTheme] = useState<string>(() => {
+    const storedTheme = localStorage.getItem("theme");
+    if (!storedTheme) return "light";
+    return JSON.parse(storedTheme);
+  });
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   return (
-    <AuthContext.Provider value={{ auth, setAuth, theme, setTheme }}>
+    <AuthContext.Provider
+      value={{ auth, setAuth, theme, setTheme, isLoading, setIsLoading }}
+    >
       {children}
     </AuthContext.Provider>
   );

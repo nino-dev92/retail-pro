@@ -8,8 +8,14 @@ export default function Header() {
   const navigate = useNavigate();
 
   const setThemeMode = () => {
-    if (theme === "dark") setTheme("light");
-    if (theme === "light") setTheme("dark");
+    if (theme === "dark") {
+      setTheme("light");
+      localStorage.setItem("theme", JSON.stringify("light"));
+    }
+    if (theme === "light") {
+      setTheme("dark");
+      localStorage.setItem("theme", JSON.stringify("dark"));
+    }
   };
 
   const handleLogout = () => {

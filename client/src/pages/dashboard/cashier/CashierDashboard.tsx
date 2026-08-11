@@ -9,9 +9,10 @@ import Modal from "../../../components/ConfirmSaleModal";
 import { Toaster, toast } from "sonner";
 import type { Product, CartItem, Category } from "../../../types/types";
 import SearchBar from "../../../components/SearchBar";
+import Spinner from "../../../utils/Spinner";
 
 export default function CashierDashboard() {
-  const { auth, theme } = useAuth();
+  const { auth, theme, isLoading, setIsLoading } = useAuth();
   const api = useAxiosPrivate();
   const [search, setSearch] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
@@ -81,6 +82,7 @@ export default function CashierDashboard() {
   };
 
   useEffect(() => {
+    setIsLoading(true);
     const getProducts = async () => {
       try {
         const response = await api.get("/products");
@@ -96,6 +98,8 @@ export default function CashierDashboard() {
         setCategories(response?.data?.data ?? []);
       } catch (error) {
         console.log(error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -201,8 +205,9 @@ export default function CashierDashboard() {
   return (
     <>
       <title>Dashboard</title>
+      {isLoading && <Spinner />}
 
-      {auth.role === "cashier" && (
+      {!isLoading && (
         <div
           className={`${theme} dark:bg-on-surface font-body-md text-body-md antialiased min-h-screen lg:h-screen flex flex-col lg:overflow-hidden`}
         >

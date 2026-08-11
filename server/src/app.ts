@@ -16,6 +16,7 @@ import requestId from "./middleware/requestId";
 import credentials from "./middleware/credentials";
 
 import authRoutes from "./routes/auth.routes";
+import userRoutes from "./routes/user.routes";
 import productRoutes from "./routes/product.routes";
 import categoryRoutes from "./routes/category.routes";
 import saleRoutes from "./routes/sale.route";
@@ -41,6 +42,7 @@ app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use(credentials);
 
 app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/category", categoryRoutes);
 app.use("/api/sales", saleRoutes);

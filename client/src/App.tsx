@@ -10,12 +10,13 @@ import AdminProducts from "./pages/dashboard/admin/AdminProducts";
 import AdminCategory from "./pages/dashboard/admin/AdminCategory";
 import AuthRoute from "./utils/AuthRoute";
 import AdminRoute from "./utils/AdminRoute";
+import Spinner from "./utils/Spinner";
 
 function App() {
   return (
     <Routes>
       <Route element={<ScrollTop />} />
-
+      <Route path="/spinner" element={<Spinner />} />
       <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
