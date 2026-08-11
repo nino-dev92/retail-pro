@@ -4,7 +4,7 @@ import ApiError from "../utils/apiError";
 import { Types } from "mongoose";
 
 export const getAllUsers = async (search?: string, page = 1, limit = 10) => {
-  let filter: any = {};
+  const filter: any = {};
   const skip = (page - 1) * 10;
 
   if (search) {
