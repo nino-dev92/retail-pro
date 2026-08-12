@@ -19,10 +19,13 @@ export const createSale = asyncHandler(async (req: Request, res: Response) => {
 
 export const viewAllSales = asyncHandler(
   async (req: Request, res: Response) => {
-    const { page, limit, from, to, productId, minTotal, maxTotal } = req.query;
+    const { from, to, productId, minTotal, maxTotal } = req.query;
+    const page = req.query.page ?? 1;
+    const limit = req.query.limit ?? 10;
+    const id = req.user?.role === "cashier" ? (req.user?.userId as string) : "";
 
     const sales = await saleService.getAllSales(
-      req.user?.userId as string,
+      id,
       Number(page),
       Number(limit),
       from as string,

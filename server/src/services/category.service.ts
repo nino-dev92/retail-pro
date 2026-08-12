@@ -3,10 +3,12 @@ import ApiError from "../utils/apiError";
 import { ICategory } from "../models/Category";
 import { Types } from "mongoose";
 
-export const allCategories = async (search?: string) => {
+export const allCategories = async (search?: string, page = 1, limit = 10) => {
   const filter: any = {
     isActive: true,
   };
+
+  const skip = (page - 1) * limit;
 
   if (search) {
     filter.name = {
@@ -15,9 +17,11 @@ export const allCategories = async (search?: string) => {
     };
   }
 
-  const categories = await Category.find(filter);
+  const categories = await Category.find(filter).limit(limit).skip(skip);
 
-  return categories;
+  const total = await Category.countDocuments(filter);
+
+  return { categories, total };
 };
 
 export const addCategory = async (data: {
