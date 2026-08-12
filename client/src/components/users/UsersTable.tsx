@@ -11,17 +11,24 @@ export default function UsersTable({ users }: UserProps) {
   return (
     <table className="w-full">
       <thead className="gap-10">
-        <th className="border dark:border-surface dark:text-surface">No.</th>
-        <th className="border dark:border-surface dark:text-surface">Name</th>
-        <th className="border dark:border-surface dark:text-surface">Email</th>
-        <th className="border dark:border-surface dark:text-surface">
-          Verified
-        </th>
-        {auth.role === "manager" && <th></th>}
+        <tr className="text-center">
+          <td className="border dark:border-surface dark:text-surface">No.</td>
+          <td className="border dark:border-surface dark:text-surface">Name</td>
+          <td className="border dark:border-surface dark:text-surface">
+            Email
+          </td>
+          <td className="border dark:border-surface dark:text-surface">
+            Verified
+          </td>
+          {auth.role === "manager" && <th></th>}
+        </tr>
       </thead>
       <tbody>
         {users.map((user, index) => (
-          <tr key={user._id} className="text-center">
+          <tr
+            key={user._id}
+            className="text-center cursor-pointer hover:bg-slate-400"
+          >
             <td className="border dark:border-surface dark:text-surface">
               {index + 1}
             </td>

@@ -140,10 +140,12 @@ export const showAllRefunds = async (
     }
   }
 
-  const allrefunds = await Refund.find(filter)
+  const refunds = await Refund.find(filter)
     .skip(skip)
     .limit(limit)
     .sort({ createdAt: -1 });
 
-  return allrefunds;
+  const total = await Refund.countDocuments();
+
+  return { refunds, total };
 };

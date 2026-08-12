@@ -114,3 +114,18 @@ export interface Cashier {
   firstName: string;
   lastName: string;
 }
+
+export interface RefundItem {
+  productId: string;
+  quantity: number;
+  price: number;
+  subTotal: number;
+}
+
+export interface Refund {
+  sale: string;
+  items: RefundItem[];
+  total: number;
+  createdBy: string;
+  reason: string;
+}

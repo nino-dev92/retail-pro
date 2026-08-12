@@ -88,7 +88,7 @@ export default function AdminDashboard() {
                 value={stats?.recentSales.length as number}
               />
               <SummaryCard
-                title="Total Product Categories"
+                title="Total Categories"
                 value={stats?.totalCategories as number}
               />
               <SummaryCard

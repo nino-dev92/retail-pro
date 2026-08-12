@@ -141,7 +141,7 @@ export const getSummaryReport = async () => {
             _id: null,
             inventoryValue: {
               $sum: {
-                $multiply: ["$price", "$quantity"],
+                $multiply: [{ $toInt: "$price" }, { $toInt: "$quantity" }],
               },
             },
           },
