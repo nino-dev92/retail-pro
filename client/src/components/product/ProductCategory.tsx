@@ -2,8 +2,8 @@ import type { Category } from "../../types/types";
 
 type CategoryPropsType = {
   categories: Category[];
-  selectedCategory: Category | null;
-  setSelectedCategory: React.SetStateAction<any>;
+  selectedCategory?: Category | null;
+  setSelectedCategory?: React.SetStateAction<any>;
 };
 
 export default function ProductCategory({

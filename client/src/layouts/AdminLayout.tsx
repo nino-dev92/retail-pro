@@ -11,7 +11,7 @@ export default function AdminLayout({ children, theme }: AdminLayoutProps) {
   return (
     <div className={theme}>
       <Header />
-      <main className="min-h-158">{children}</main>
+      <main className="min-h-158 dark:bg-on-surface">{children}</main>
       <Footer />
     </div>
   );

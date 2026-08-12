@@ -66,9 +66,9 @@ export const findAllProducts = async (
   const totalProducts = await Products.countDocuments(filter);
 
   const productDTO = products.map((product) => {
-    const { _id, name, description, price, sku, category } = product;
+    const { _id, name, description, price, sku, category, quantity } = product;
 
-    return { _id, name, description, price, sku, category };
+    return { _id, name, description, price, sku, category, quantity };
   });
 
   return { productDTO, totalProducts };

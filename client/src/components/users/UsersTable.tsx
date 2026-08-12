@@ -14,7 +14,6 @@ export default function UsersTable({ users }: UserProps) {
         <th className="border dark:border-surface dark:text-surface">No.</th>
         <th className="border dark:border-surface dark:text-surface">Name</th>
         <th className="border dark:border-surface dark:text-surface">Email</th>
-        <th className="border dark:border-surface dark:text-surface">Role</th>
         <th className="border dark:border-surface dark:text-surface">
           Verified
         </th>
@@ -32,9 +31,7 @@ export default function UsersTable({ users }: UserProps) {
             <td className="border dark:border-surface dark:text-surface">
               {user.email}
             </td>
-            <td className="border dark:border-surface dark:text-surface">
-              {user.role}
-            </td>
+
             <td className="border dark:border-surface dark:text-surface">
               {user.isVerified === true ? "True" : "False"}
             </td>

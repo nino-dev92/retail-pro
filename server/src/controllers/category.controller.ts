@@ -6,13 +6,25 @@ import { ICategory } from "../models/Category";
 export const viewAllCategories = asyncHandler(
   async (req: Request, res: Response) => {
     const search = req.query.search as string | undefined;
+    const page = req.query.page ?? 1;
+    const limit = req.query.limit ?? 10;
 
-    const categories = await categoryService.allCategories(search);
+    const categories = await categoryService.allCategories(
+      search,
+      Number(page),
+      Number(limit),
+    );
 
     res.status(200).json({
       success: true,
       message: "All Categories",
-      data: categories,
+      data: categories.categories,
+      pagination: {
+        page: page,
+        limit: limit,
+        total: categories.total,
+        totalPages: Math.ceil(categories.total / Number(limit)),
+      },
     });
   },
 );

@@ -14,13 +14,21 @@ export default function ProductCard({
   return (
     <div className="bg-surface dark:bg-primary border border-primary rounded p-4 hover:border-primary transition-all flex flex-col gap-3 group relative">
       <div className="flex justify-between items-start">
-        <span className="font-label-md text-label-md text-on-surface-variant bg-surface-container px-2 py-0.5 rounded">
+        <p className="font-label-md text-label-md text-on-surface-variant bg-surface-container px-2 py-0.5 rounded">
           {product.sku}
-        </span>
+        </p>
 
-        <span className="font-label-sm text-label-sm text-tertiary bg-tertiary-fixed-dim bg-opacity-20 px-2 py-0.5 rounded">
-          {product.quantity}
-        </span>
+        <p
+          className={`font-label-sm text-label-sm ${
+            product.quantity < 5
+              ? "text-red-500 font-bold dark:text-red"
+              : product.quantity < 10
+                ? "text-yellow-600 font-bold dark:text-yellow"
+                : "text-primary dark:text-surface"
+          }   px-2 py-0.5 rounded`}
+        >
+          Stock: {product.quantity}
+        </p>
       </div>
 
       <div>
@@ -31,7 +39,7 @@ export default function ProductCard({
 
       <div className="mt-auto flex justify-between items-end pt-2 border-t border-surface-variant">
         <span className="font-headline-md text-headline-md font-bold text-primary dark:text-surface">
-          N{product.price}
+          Price: N{product.price}
         </span>
 
         {showAddButton && (

@@ -21,7 +21,6 @@ export default function AdminDashboard() {
         const response = await api.get("/dashboard");
         const statsData = response.data?.data;
         setDashboard(statsData);
-        console.log(statsData);
       } catch (error) {
         console.log(error);
       } finally {
