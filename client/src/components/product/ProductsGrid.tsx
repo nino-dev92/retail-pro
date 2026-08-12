@@ -3,12 +3,14 @@ import ProductCard from "./ProductCard";
 
 type ProductGridProps = {
   filteredProducts: Product[];
-  addToCart: (product: Product) => void;
+  addToCart?: (product: Product) => void;
+  showAddButton?: boolean;
 };
 
 export default function ProductsGrid({
   filteredProducts,
   addToCart,
+  showAddButton = true,
 }: ProductGridProps) {
   return (
     <div className="flex-1 overflow-y-auto p-4 md:p-6 bg-background dark:bg-on-surface">
@@ -28,8 +30,8 @@ export default function ProductsGrid({
             <ProductCard
               key={product._id}
               product={product}
-              showAddButton={true}
               addToCart={addToCart}
+              showAddButton={showAddButton}
             />
           ))}
         </div>

@@ -4,10 +4,9 @@ import LandingPage from "./pages/LandingPage";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/dashboard/Dashboard";
-import AdminSales from "./pages/dashboard/admin/AdminSales";
-import AdminUsers from "./pages/dashboard/admin/AdminUsers";
-import AdminProducts from "./pages/dashboard/admin/AdminProducts";
-import AdminCategory from "./pages/dashboard/admin/AdminCategory";
+import AdminSales from "./pages/admin/AdminSales";
+import AdminUsers from "./pages/admin/AdminUsers";
+import AdminProducts from "./pages/admin/AdminProducts";
 import AuthRoute from "./utils/AuthRoute";
 import AdminRoute from "./utils/AdminRoute";
 import Spinner from "./utils/Spinner";
@@ -28,7 +27,6 @@ function App() {
       <Route element={<AdminRoute />}>
         <Route path="/sales" element={<AdminSales />} />
         <Route path="/users" element={<AdminUsers />} />
-        <Route path="/category" element={<AdminCategory />} />
         <Route path="/products" element={<AdminProducts />} />
       </Route>
     </Routes>

@@ -1,19 +1,24 @@
 import { NavLink, Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
 import useAuth from "../hooks/useAuth";
 import { MdInventory } from "react-icons/md";
 import { FaPowerOff } from "react-icons/fa";
+import { IoSettingsOutline } from "react-icons/io5";
 
 export default function Header() {
   const { auth, setAuth, theme, setTheme } = useAuth();
+  const [showSettings, setShowSettings] = useState<boolean>(false);
   const navigate = useNavigate();
 
   const setThemeMode = () => {
     if (theme === "dark") {
       setTheme("light");
+      setShowSettings(false);
       localStorage.setItem("theme", JSON.stringify("light"));
     }
     if (theme === "light") {
       setTheme("dark");
+      setShowSettings(false);
       localStorage.setItem("theme", JSON.stringify("dark"));
     }
   };
@@ -42,41 +47,40 @@ export default function Header() {
                 <span>Retail Pro</span>
               </Link>
 
-              {/* Navigation */}
-              {/* <div className="hidden md:flex items-center gap-8">
-          <a
-            href="#features"
-            className="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors"
-          >
-            Features
-          </a>
-          <a
-            href="#pricing"
-            className="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors"
-          >
-            Pricing
-          </a>
-          <a
-            href="#about"
-            className="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors"
-          >
-            About
-          </a>
-        </div> */}
-
               <div className="flex items-center gap-20">
                 <div>
-                  <button
-                    title={
-                      theme === "dark"
-                        ? "Change to Light mode"
-                        : "Change to dark mode"
-                    }
-                    className="cursor-pointer text-xl"
-                    onClick={setThemeMode}
-                  >
-                    {theme === "dark" ? "☀️" : "🌑"}
-                  </button>
+                  {!showSettings && (
+                    <IoSettingsOutline
+                      className="cursor-pointer dark:text-surface"
+                      title="Settings"
+                      size={20}
+                      onClick={() => setShowSettings(true)}
+                    />
+                  )}
+                  {showSettings && (
+                    <div className="flex gap-5 dark:bg-on-surface">
+                      <button
+                        title="Light mode"
+                        className="cursor-pointer text-xl"
+                        onClick={() => {
+                          setTheme("light");
+                          setShowSettings(false);
+                        }}
+                      >
+                        ☀️
+                      </button>
+                      <button
+                        title="Dark mode"
+                        className="cursor-pointer text-xl"
+                        onClick={() => {
+                          setTheme("dark");
+                          setShowSettings(false);
+                        }}
+                      >
+                        🌑
+                      </button>
+                    </div>
+                  )}
                 </div>
                 {/* Auth Buttons */}
                 <div className="flex items-center gap-4">
@@ -130,18 +134,40 @@ export default function Header() {
               </NavLink>
             </nav>
           </div>
-          <div className="flex items-center gap-4">
-            <button
-              title={
-                theme === "dark"
-                  ? "Change to Light mode"
-                  : "Change to dark mode"
-              }
-              className="cursor-pointer text-xl"
-              onClick={setThemeMode}
-            >
-              {theme === "dark" ? "☀️" : "🌑"}
-            </button>
+
+          <div className="flex items-center gap-10">
+            {!showSettings && (
+              <IoSettingsOutline
+                className="cursor-pointer dark:text-surface"
+                title="Settings"
+                size={20}
+                onClick={() => setShowSettings(true)}
+              />
+            )}
+            {showSettings && (
+              <div className="flex gap-5 dark:bg-on-surface">
+                <button
+                  title="Light mode"
+                  className="cursor-pointer text-xl"
+                  onClick={() => {
+                    setTheme("light");
+                    setShowSettings(false);
+                  }}
+                >
+                  ☀️
+                </button>
+                <button
+                  title="Dark mode"
+                  className="cursor-pointer text-xl"
+                  onClick={() => {
+                    setTheme("dark");
+                    setShowSettings(false);
+                  }}
+                >
+                  🌑
+                </button>
+              </div>
+            )}
             <button
               className="font-label-md  dark:text-surface dark:border-surface active:scale-95 cursor-pointer border px-4 py-2 rounded transition-colors flex items-center gap-2"
               onClick={handleLogout}
@@ -151,6 +177,7 @@ export default function Header() {
           </div>
         </header>
       )}
+
       {/** Admin Nav */}
       {auth && auth.role === "admin" && (
         <header className="bg-surface dark:bg-on-surface border-b border-outline-variant flex justify-between items-center w-full px-margin-desktop py-4 sticky top-0 z-50">
@@ -187,30 +214,46 @@ export default function Header() {
               Products
             </NavLink>
             <NavLink
-              to="/category"
-              className="text-primary dark:text-surface font-bold font-label-md pb-1 hover:scale-105 transition-all"
-            >
-              Categories
-            </NavLink>
-            <NavLink
               to="/sales"
               className="text-primary dark:text-surface font-bold b-2 font-label-md pb-1 hover:scale-105 transition-all"
             >
               Sales
             </NavLink>
           </nav>
-          <div className="flex items-center gap-4">
-            <button
-              title={
-                theme === "dark"
-                  ? "Change to Light mode"
-                  : "Change to dark mode"
-              }
-              className="cursor-pointer text-xl"
-              onClick={setThemeMode}
-            >
-              {theme === "dark" ? "☀️" : "🌑"}
-            </button>
+
+          <div className="flex items-center gap-10">
+            {!showSettings && (
+              <IoSettingsOutline
+                className="cursor-pointer dark:text-surface"
+                title="Settings"
+                size={20}
+                onClick={() => setShowSettings(true)}
+              />
+            )}
+            {showSettings && (
+              <div className="flex gap-5 dark:bg-on-surface">
+                <button
+                  title="Light mode"
+                  className="cursor-pointer text-xl"
+                  onClick={() => {
+                    setTheme("light");
+                    setShowSettings(false);
+                  }}
+                >
+                  ☀️
+                </button>
+                <button
+                  title="Dark mode"
+                  className="cursor-pointer text-xl"
+                  onClick={() => {
+                    setTheme("dark");
+                    setShowSettings(false);
+                  }}
+                >
+                  🌑
+                </button>
+              </div>
+            )}
             <button
               className="font-label-md  dark:text-surface dark:border-surface active:scale-95 cursor-pointer border px-4 py-2 rounded transition-colors flex items-center gap-2"
               onClick={handleLogout}
