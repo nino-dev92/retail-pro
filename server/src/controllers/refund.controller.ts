@@ -25,5 +25,16 @@ export const getAllRefunds = asyncHandler(
     const to = req.query.date as string;
 
     const refunds = await refundService.showAllRefunds(page, limit, from, to);
+
+    res.status(200).json({
+      success: true,
+      message: "Refunds retrieved successfully",
+      data: refunds.refunds,
+      pagination: {
+        page,
+        limit,
+        total: refunds.total,
+      },
+    });
   },
 );
