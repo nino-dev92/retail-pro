@@ -14,12 +14,12 @@ describe("Category Service", () => {
     it("Should return all categories in db", async () => {
       const categories = await categoryService.allCategories();
       expect(categories).not.toBe(null);
-      expect(categories.length).toBe(5);
+      expect(categories.categories.length).toBe(5);
     });
     it("should return all categories with the search string", async () => {
       const categories = await categoryService.allCategories("category");
       expect(categories).not.toBe(null);
-      expect(categories.length).toBe(5);
+      expect(categories.categories.length).toBe(5);
     });
   });
 
@@ -27,7 +27,7 @@ describe("Category Service", () => {
     it("should return an empty array", async () => {
       const categories = await categoryService.allCategories();
 
-      expect(categories).toEqual([]);
+      expect(categories.categories).toEqual([]);
     });
   });
 
