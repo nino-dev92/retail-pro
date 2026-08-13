@@ -48,8 +48,6 @@ export const findAll = async (search?: string, page = 1, limit = 10) => {
     .limit(limit)
     .sort({ name: 1 });
 
-  console.log(suppliers);
-
   return suppliers;
 };
 
