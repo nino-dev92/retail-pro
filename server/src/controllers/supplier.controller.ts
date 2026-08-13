@@ -18,7 +18,7 @@ export const getAllSuppliers = asyncHandler(
   async (req: Request, res: Response) => {
     const page = Math.max(Number(req.query.page) || 1, 1);
 
-    const limit = Math.max(Number(req.query.limit) || 10, 1);
+    const limit = Math.max(Number(req.query.limit) || 10, 10);
 
     const search = req.query.search as string;
 

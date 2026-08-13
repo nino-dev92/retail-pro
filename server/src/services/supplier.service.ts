@@ -29,11 +29,12 @@ export const createSupplier = async (data: SupplierDTO) => {
   return { name, address, contactPerson, email, phone };
 };
 
-export const findAll = async (search = "", page = 1, limit = 10) => {
-  const filter: any = {};
-  const skip = (page - 1) * limit;
+export const findAll = async (search?: string, page = 1, limit = 10) => {
+  const filter: Record<string, any> = {
+    active: true,
+  };
 
-  filter.active = true;
+  const skip = (page - 1) * limit;
 
   if (search) {
     filter.name = {
@@ -42,9 +43,14 @@ export const findAll = async (search = "", page = 1, limit = 10) => {
     };
   }
 
-  const allSuppliers = await Supplier.find(filter).skip(skip).limit(limit);
+  const suppliers = await Supplier.find(filter)
+    .skip(skip)
+    .limit(limit)
+    .sort({ name: 1 });
 
-  return allSuppliers;
+  console.log(suppliers);
+
+  return suppliers;
 };
 
 export const findSupplierById = async (id: string) => {
