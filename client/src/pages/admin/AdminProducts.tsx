@@ -1,5 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
+import { Link } from "react-router-dom";
 import type { Category, Product } from "../../types/types";
+import { IoIosAddCircleOutline } from "react-icons/io";
 import AdminLayout from "../../layouts/AdminLayout";
 import useAuth from "../../hooks/useAuth";
 import useAxiosPrivate from "../../hooks/useAxiosPrivate";
@@ -87,9 +89,16 @@ export default function CategoryProducts() {
       {!isLoading && (
         <div className="flex flex-col w-full gap-5 items-center p-3 sm:p-5">
           <h1 className="text-2xl dark:text-surface text-center">Products</h1>
-          <section className="flex gap-5 justify-center">
+          <section className="grid grid-cols-1 sm:grid-cols-3 gap-5 place-items-center text-center">
             <SummaryCard title="Total Products" value={total.products} />
             <SummaryCard title="Total Categories" value={total.categories} />
+            <Link
+              to="/add-product"
+              title="Add Product or Category"
+              className="cursor-pointer p-1 rounded-sm text-green-500 dark:border-on-surface justify-content-center border max-h-fit border-surface hover:border-green-500 active:scale-95 transition-all duration-200"
+            >
+              <IoIosAddCircleOutline size={40} />
+            </Link>
           </section>
 
           <section className="w-full flex-1 flex flex-col bg-surface-container-lowest dark:bg-on-surface border border-outline-variant rounded-lg overflow-hidden min-w-0 min-h-0">

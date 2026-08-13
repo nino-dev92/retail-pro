@@ -7,6 +7,8 @@ import Dashboard from "./pages/dashboard/Dashboard";
 import AdminSales from "./pages/admin/AdminSales";
 import AdminUsers from "./pages/admin/AdminUsers";
 import AdminProducts from "./pages/admin/AdminProducts";
+import AddProduct from "./pages/AddProduct";
+import AddCategory from "./pages/AddCategory";
 import AuthRoute from "./utils/AuthRoute";
 import AdminRoute from "./utils/AdminRoute";
 import Spinner from "./utils/Spinner";
@@ -28,6 +30,8 @@ function App() {
         <Route path="/sales" element={<AdminSales />} />
         <Route path="/users" element={<AdminUsers />} />
         <Route path="/products" element={<AdminProducts />} />
+        <Route path="/add-product" element={<AddProduct />} />
+        <Route path="/add-category" element={<AddCategory />} />
       </Route>
     </Routes>
   );
