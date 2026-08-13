@@ -226,12 +226,13 @@ export default function CashierDashboard() {
 
           {/* Main Workspace */}
           <main className={` ${isModalOpen && "blur-sm"} `}>
-            <div className="flex justify-between items-center px-10 gap-gutter max-w-container-max mx-auto w-full">
-              <p className="dark:text-surface pt-2">
+            <div className="flex justify-between items-center px-4 sm:px-10 gap-2 sm:gap-6 mt-4 max-w-container-max mx-auto w-full">
+              <p className="dark:text-surface text-center">
                 <b className="text-lg">Welcome</b>{" "}
                 {auth.firstName.toUpperCase()} {auth.lastName.toUpperCase()}
               </p>
-              <p className="dark:text-surface font-bold">
+
+              <p className="dark:text-surface font-bold text-center">
                 {new Date().toDateString()}
               </p>
             </div>

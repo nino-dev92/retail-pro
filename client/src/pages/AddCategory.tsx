@@ -14,7 +14,7 @@ export default function AddCategory() {
   const [description, setDescription] = useState("");
 
   const inputClass =
-    "w-full rounded-lg border border-surface/30 bg-surface px-3 py-2.5 outline-none transition placeholder:text-surface/50 focus:border-primary focus:ring-2 focus:ring-primary/20";
+    "w-full rounded-lg border border-surface/30 bg-surface px-3 py-2.5 text-sm outline-none transition placeholder:text-surface/50 focus:border-primary focus:ring-2 focus:ring-primary/20 sm:text-base";
 
   const labelClass = "mb-1.5 block text-sm font-medium text-surface";
 
@@ -26,17 +26,19 @@ export default function AddCategory() {
       description,
     };
 
-    console.log(category);
-
     try {
       const response = await api.post("/category", category);
 
-      setName("");
-      setDescription("");
-      if (response.status === 201)
+      if (response.status === 201) {
+        setName("");
+        setDescription("");
+
         toast.success("Category created successfully");
+      }
     } catch (error: any) {
-      toast.error(error?.response?.data?.message);
+      toast.error(
+        error?.response?.data?.message || "Failed to create category",
+      );
     }
   };
 
@@ -47,13 +49,14 @@ export default function AddCategory() {
 
   return (
     <AdminLayout theme={theme}>
-      <Toaster position="top-right" richColors={true} />
-      <div className="min-h-full w-full px-3 py-5 sm:px-6 lg:px-8">
+      <Toaster position="top-right" richColors />
+
+      <main className="min-h-full w-full px-3 py-4 sm:px-6 sm:py-6 lg:px-8">
         <div className="mx-auto w-full max-w-3xl">
-          {/* Page Header */}
-          <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          {/* PAGE HEADER */}
+          <section className="mb-5 flex flex-col gap-4 sm:mb-6 md:flex-row md:items-center md:justify-between">
             {/* Title & Description */}
-            <div>
+            <div className="min-w-0 text-center md:text-left">
               <h1 className="text-2xl font-bold dark:text-surface sm:text-3xl">
                 Add Category
               </h1>
@@ -63,36 +66,56 @@ export default function AddCategory() {
               </p>
             </div>
 
-            {/* Header Actions */}
-            <div className="flex flex-wrap items-center gap-3 sm:gap-5">
-              {/* Add Category */}
+            {/* HEADER ACTIONS */}
+            <div
+              className="
+                flex w-full flex-col gap-2
+                sm:flex-row sm:justify-center
+                md:w-auto md:shrink-0 md:justify-end
+              "
+            >
+              {/* Back to Products */}
               <button
                 type="button"
-                onClick={() => navigate("/add-product")}
-                className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:opacity-90 active:scale-95 cursor-pointer"
-              >
-                + Add Product
-              </button>
-
-              {/* Go Back */}
-              <button
-                type="button"
-                className="rounded-lg border border-surface/30 px-4 py-2 text-sm font-medium text-surface-tint hover:border-surface-tint transition hover:bg-surface/10 active:scale-95 cursor-pointer"
                 onClick={() => navigate("/products")}
+                className="w-full rounded-lg border border-surface/30 px-4 py-2.5 text-sm font-medium text-surface-tint transition hover:border-surface-tint
+                  hover:bg-surface/10 active:scale-95 sm:w-auto cursor-pointer"
               >
                 ← Back to Products
               </button>
-            </div>
-          </div>
 
-          {/* Form Card */}
+              {/* Add Product */}
+              <button
+                type="button"
+                onClick={() => navigate("/add-product")}
+                className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:opacity-90 active:scale-95 sm:w-auto cursor-pointer"
+              >
+                + Add Product
+              </button>
+            </div>
+          </section>
+
+          {/*  FORM CARD  */}
           <form
             onSubmit={handleSubmit}
-            className="overflow-hidden rounded-xl border border-surface/20 bg-surface-tint shadow-sm"
+            className="
+              w-full overflow-hidden rounded-xl
+              border border-surface/20
+              bg-surface-tint
+              shadow-sm
+            "
           >
-            {/* Form Header */}
-            <div className="border-b border-surface/20 px-4 py-5 sm:px-6">
-              <h2 className="text-lg font-semibold text-surface">
+            {/* =================================================
+                FORM HEADER
+            ================================================== */}
+            <div
+              className="
+                border-b border-surface/20
+                px-4 py-5
+                sm:px-6 sm:py-6
+              "
+            >
+              <h2 className="text-lg font-semibold text-surface sm:text-xl">
                 Category Information
               </h2>
 
@@ -101,8 +124,10 @@ export default function AddCategory() {
               </p>
             </div>
 
-            {/* Form Body */}
-            <div className="space-y-6 p-4 sm:p-6">
+            {/* =================================================
+                FORM BODY
+            ================================================== */}
+            <div className="space-y-6 p-4 sm:p-6 lg:p-7">
               {/* Category Name */}
               <div>
                 <label htmlFor="name" className={labelClass}>
@@ -120,7 +145,7 @@ export default function AddCategory() {
                   className={inputClass}
                 />
 
-                <p className="mt-1.5 text-xs text-surface/50">
+                <p className="mt-1.5 text-xs leading-5 text-surface/50">
                   Choose a clear name that will be easy to identify.
                 </p>
               </div>
@@ -142,20 +167,40 @@ export default function AddCategory() {
                   className={`${inputClass} resize-y`}
                 />
 
-                <p className="mt-1.5 text-xs text-surface/50">
+                <p className="mt-1.5 text-xs leading-5 text-surface/50">
                   A short description helps explain what products belong to this
                   category.
                 </p>
               </div>
             </div>
 
-            {/* Form Actions */}
-            <div className="flex flex-col-reverse gap-3 border-t border-surface/20 bg-surface-tint/50 p-4 sm:flex-row sm:justify-end sm:px-6">
+            {/* =================================================
+                FORM ACTIONS
+            ================================================== */}
+            <div
+              className="
+                flex flex-col gap-3
+                border-t border-surface/20
+                bg-surface-tint/50
+                p-4
+                sm:flex-row sm:justify-end
+                sm:px-6 sm:py-5
+              "
+            >
               {/* Clear */}
               <button
                 type="button"
                 onClick={handleClear}
-                className="rounded-lg border border-surface/30 px-5 py-2.5 text-sm font-medium text-surface transition hover:bg-surface/10 active:scale-95 cursor-pointer"
+                className="
+                  w-full rounded-lg
+                  border border-surface/30
+                  px-5 py-2.5
+                  text-sm font-medium text-surface
+                  transition
+                  hover:bg-surface/10
+                  active:scale-[0.98]
+                  sm:w-auto
+                "
               >
                 Clear
               </button>
@@ -163,14 +208,24 @@ export default function AddCategory() {
               {/* Submit */}
               <button
                 type="submit"
-                className="rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:opacity-90 active:scale-95 cursor-pointer"
+                className="
+                  w-full rounded-lg
+                  bg-primary
+                  px-5 py-2.5
+                  text-sm font-semibold text-white
+                  shadow-sm
+                  transition
+                  hover:opacity-90
+                  active:scale-[0.98]
+                  sm:w-auto
+                "
               >
                 Add Category
               </button>
             </div>
           </form>
         </div>
-      </div>
+      </main>
     </AdminLayout>
   );
 }

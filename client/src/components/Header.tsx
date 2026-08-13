@@ -1,31 +1,22 @@
 import { NavLink, Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import useAuth from "../hooks/useAuth";
-import { MdInventory } from "react-icons/md";
+import { MdInventory, MdMenu } from "react-icons/md";
 import { FaPowerOff } from "react-icons/fa";
-import { IoSettingsOutline } from "react-icons/io5";
+import { IoClose, IoSettingsOutline } from "react-icons/io5";
 
 export default function Header() {
   const { auth, setAuth, theme, setTheme } = useAuth();
-  const [showSettings, setShowSettings] = useState<boolean>(false);
-  const navigate = useNavigate();
 
-  const setThemeMode = () => {
-    if (theme === "dark") {
-      setTheme("light");
-      setShowSettings(false);
-      localStorage.setItem("theme", JSON.stringify("light"));
-    }
-    if (theme === "light") {
-      setTheme("dark");
-      setShowSettings(false);
-      localStorage.setItem("theme", JSON.stringify("dark"));
-    }
-  };
+  const [showSettings, setShowSettings] = useState<boolean>(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
+
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     setAuth(null);
-    localStorage.removeItem(auth);
+    localStorage.removeItem("auth");
+    setMobileMenuOpen(false);
     navigate("/");
   };
 
@@ -33,21 +24,23 @@ export default function Header() {
     <>
       {/** Not logged in Nav */}
       {!auth && (
-        <header className={theme}>
+        <header className={`${theme} relative`}>
           <nav className="sticky top-0 z-50 w-full border-b bg-surface dark:bg-on-surface">
-            <div className="mx-auto flex max-w-container-max w-full items-center justify-between px-margin-desktop py-4">
+            <div className="mx-auto flex max-w-container-max w-full items-center justify-between px-3 sm:px-6 lg:px-margin-desktop py-3 sm:py-4">
               {/* Logo */}
               <Link
                 to="/"
-                className="flex items-center gap-2 text-primary dark:text-surface font-semibold text-xl"
+                className="flex items-center gap-1.5 sm:gap-2 text-primary dark:text-surface font-semibold text-base sm:text-xl"
               >
-                <span className="text-2xl">
+                <span className="text-xl sm:text-2xl">
                   <MdInventory />
                 </span>
+
                 <span>Retail Pro</span>
               </Link>
 
-              <div className="flex items-center gap-20">
+              {/* Desktop Nav */}
+              <div className="hidden md:flex items-center gap-8 lg:gap-20">
                 <div>
                   {!showSettings && (
                     <IoSettingsOutline
@@ -57,6 +50,7 @@ export default function Header() {
                       onClick={() => setShowSettings(true)}
                     />
                   )}
+
                   {showSettings && (
                     <div className="flex gap-5 dark:bg-on-surface">
                       <button
@@ -69,6 +63,7 @@ export default function Header() {
                       >
                         ☀️
                       </button>
+
                       <button
                         title="Dark mode"
                         className="cursor-pointer text-xl"
@@ -82,6 +77,7 @@ export default function Header() {
                     </div>
                   )}
                 </div>
+
                 {/* Auth Buttons */}
                 <div className="flex items-center gap-4">
                   <NavLink
@@ -99,6 +95,97 @@ export default function Header() {
                   </NavLink>
                 </div>
               </div>
+
+              {/* Mobile Hamburger */}
+              <button
+                className="md:hidden text-primary dark:text-surface cursor-pointer p-1"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              >
+                {mobileMenuOpen ? <IoClose size={24} /> : <MdMenu size={26} />}
+              </button>
+            </div>
+
+            {/* Mobile Overlay */}
+            <div
+              onClick={() => setMobileMenuOpen(false)}
+              className={`md:hidden fixed inset-0 z-40 bg-black/40 transition-opacity duration-300 ${
+                mobileMenuOpen ? "visible opacity-100" : "invisible opacity-0"
+              }`}
+            />
+
+            {/* Mobile Slide-in Nav */}
+            <div
+              className={`md:hidden fixed right-0 top-0 z-50 h-full w-[80%] max-w-xs bg-surface dark:bg-on-surface shadow-2xl transition-transform duration-300 ease-in-out ${
+                mobileMenuOpen ? "translate-x-0" : "translate-x-full"
+              }`}
+            >
+              {/* Mobile Header */}
+              <div className="flex items-center justify-between border-b border-outline-variant px-4 py-3">
+                <div className="flex items-center gap-2 text-primary dark:text-surface font-semibold text-base">
+                  <MdInventory className="text-xl" />
+
+                  <span>Retail Pro</span>
+                </div>
+
+                <button
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="rounded p-1 text-primary dark:text-surface hover:bg-primary/10"
+                >
+                  <IoClose size={24} />
+                </button>
+              </div>
+
+              {/* Auth Buttons */}
+              <div className="flex flex-col gap-2 px-3 py-3">
+                <NavLink
+                  to="/login"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="rounded border border-outline-variant px-3 py-2.5 text-center text-sm text-primary dark:text-surface hover:bg-primary hover:text-on-primary"
+                >
+                  Login
+                </NavLink>
+
+                <NavLink
+                  to="/signup"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="rounded bg-primary px-3 py-2.5 text-center text-sm text-on-primary hover:opacity-90"
+                >
+                  Sign Up
+                </NavLink>
+              </div>
+
+              {/* Mobile Settings */}
+              <div className="mx-3 border-t border-outline-variant pt-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-on-surface-variant dark:text-surface">
+                    Theme
+                  </span>
+
+                  <div className="flex gap-2">
+                    <button
+                      title="Light mode"
+                      className="cursor-pointer rounded p-1 text-lg hover:bg-primary/10"
+                      onClick={() => {
+                        setTheme("light");
+                        setMobileMenuOpen(false);
+                      }}
+                    >
+                      ☀️
+                    </button>
+
+                    <button
+                      title="Dark mode"
+                      className="cursor-pointer rounded p-1 text-lg hover:bg-primary/10"
+                      onClick={() => {
+                        setTheme("dark");
+                        setMobileMenuOpen(false);
+                      }}
+                    >
+                      🌑
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </nav>
         </header>
@@ -106,160 +193,430 @@ export default function Header() {
 
       {/** Cashier Nav */}
       {auth && auth.role === "cashier" && (
-        <header className="bg-surface  dark:bg-on-surface border-b border-outline-variant flex justify-between items-center w-full px-margin-desktop py-4 sticky top-0 z-50">
-          <div className="flex items-center gap-8">
+        <header className="bg-surface dark:bg-on-surface border-b border-outline-variant w-full sticky top-0 z-50">
+          <div className="flex justify-between items-center w-full px-3 sm:px-6 lg:px-margin-desktop py-3 sm:py-4">
             {/* Logo */}
-            <Link
-              to="/dashboard"
-              className="flex items-center gap-2 text-primary dark:text-surface font-semibold text-xl"
-            >
-              <span className="text-2xl">
-                <MdInventory />
-              </span>
-              <span>Retail Pro</span>
-            </Link>
-            <nav className="hidden md:flex gap-6">
-              {/* <!-- Assuming standard navigation for a dashboard app, adapting given JSON structure conceptually --> */}
+            <div className="flex gap-6 items-center">
               <Link
                 to="/dashboard"
-                className="text-on-surface-variant dark:text-surface font-label-md text-label-md hover:text-primary transition-colors duration-200"
+                className="flex items-center gap-1.5 sm:gap-2 text-primary dark:text-surface font-semibold text-base sm:text-xl"
               >
-                Dashboard
+                <span className="text-xl sm:text-2xl">
+                  <MdInventory />
+                </span>
+
+                <span>Retail Pro</span>
               </Link>
+
+              {/* Desktop Nav */}
+              <nav className="hidden md:flex gap-6">
+                <Link
+                  to="/dashboard"
+                  className="text-primary dark:text-surface font-label-md text-label-md hover:text-primary transition-colors duration-200"
+                >
+                  Dashboard
+                </Link>
+
+                <NavLink
+                  to="/dashboard"
+                  className="text-primary dark:text-surface border-b-2 border-primary font-bold pb-1 font-label-md text-label-md"
+                >
+                  Add Sale
+                </NavLink>
+              </nav>
+            </div>
+
+            {/* Desktop Actions */}
+            <div className="hidden md:flex items-center gap-6 lg:gap-10">
+              {!showSettings && (
+                <IoSettingsOutline
+                  className="cursor-pointer dark:text-surface"
+                  title="Settings"
+                  size={20}
+                  onClick={() => setShowSettings(true)}
+                />
+              )}
+
+              {showSettings && (
+                <div className="flex gap-5 dark:bg-on-surface">
+                  <button
+                    title="Light mode"
+                    className="cursor-pointer text-xl"
+                    onClick={() => {
+                      setTheme("light");
+                      setShowSettings(false);
+                    }}
+                  >
+                    ☀️
+                  </button>
+
+                  <button
+                    title="Dark mode"
+                    className="cursor-pointer text-xl"
+                    onClick={() => {
+                      setTheme("dark");
+                      setShowSettings(false);
+                    }}
+                  >
+                    🌑
+                  </button>
+                </div>
+              )}
+
+              <button
+                className="font-label-md dark:text-surface dark:border-surface active:scale-95 cursor-pointer border px-4 py-2 rounded transition-colors flex items-center gap-2"
+                onClick={handleLogout}
+              >
+                <FaPowerOff />
+                Logout
+              </button>
+            </div>
+
+            {/* Mobile Hamburger */}
+            <button
+              className="md:hidden text-primary dark:text-surface cursor-pointer p-1"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? <IoClose size={24} /> : <MdMenu size={26} />}
+            </button>
+          </div>
+
+          {/* Mobile Overlay */}
+          <div
+            onClick={() => setMobileMenuOpen(false)}
+            className={`md:hidden fixed inset-0 z-40 bg-black/40 transition-opacity duration-300 ${
+              mobileMenuOpen ? "visible opacity-100" : "invisible opacity-0"
+            }`}
+          />
+
+          {/* Mobile Slide-in Nav */}
+          <div
+            className={`md:hidden fixed right-0 top-0 z-50 h-full w-[80%] max-w-xs bg-surface dark:bg-on-surface shadow-2xl transition-transform duration-300 ease-in-out ${
+              mobileMenuOpen ? "translate-x-0" : "translate-x-full"
+            }`}
+          >
+            {/* Mobile Header */}
+            <div className="flex items-center justify-between border-b border-outline-variant px-4 py-3">
+              <div className="flex items-center gap-2 text-primary dark:text-surface font-semibold text-base">
+                <MdInventory className="text-xl" />
+
+                <span>Retail Pro</span>
+              </div>
+
+              <button
+                onClick={() => setMobileMenuOpen(false)}
+                className="rounded p-1 text-primary dark:text-surface hover:bg-primary/10"
+              >
+                <IoClose size={24} />
+              </button>
+            </div>
+
+            {/* Cashier Links */}
+            <nav className="flex flex-col gap-1 px-3 py-3">
               <NavLink
                 to="/dashboard"
-                className="text-primary dark:text-surface border-b-2 border-primary font-bold pb-1 font-label-md text-label-md"
+                onClick={() => setMobileMenuOpen(false)}
+                className={({ isActive }) =>
+                  `rounded px-3 py-2.5 text-sm ${
+                    isActive
+                      ? "bg-primary text-on-primary font-semibold"
+                      : "text-on-surface-variant dark:text-surface hover:bg-primary/10"
+                  }`
+                }
+              >
+                Dashboard
+              </NavLink>
+
+              <NavLink
+                to="/dashboard"
+                onClick={() => setMobileMenuOpen(false)}
+                className="rounded px-3 py-2.5 text-sm text-primary dark:text-surface hover:bg-primary/10"
               >
                 Add Sale
               </NavLink>
             </nav>
-          </div>
 
-          <div className="flex items-center gap-10">
-            {!showSettings && (
-              <IoSettingsOutline
-                className="cursor-pointer dark:text-surface"
-                title="Settings"
-                size={20}
-                onClick={() => setShowSettings(true)}
-              />
-            )}
-            {showSettings && (
-              <div className="flex gap-5 dark:bg-on-surface">
-                <button
-                  title="Light mode"
-                  className="cursor-pointer text-xl"
-                  onClick={() => {
-                    setTheme("light");
-                    setShowSettings(false);
-                  }}
-                >
-                  ☀️
-                </button>
-                <button
-                  title="Dark mode"
-                  className="cursor-pointer text-xl"
-                  onClick={() => {
-                    setTheme("dark");
-                    setShowSettings(false);
-                  }}
-                >
-                  🌑
-                </button>
+            {/* Mobile Settings */}
+            <div className="mx-3 border-t border-outline-variant pt-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-on-surface-variant dark:text-surface">
+                  Theme
+                </span>
+
+                <div className="flex gap-2">
+                  <button
+                    title="Light mode"
+                    className="cursor-pointer rounded p-1 text-lg hover:bg-primary/10"
+                    onClick={() => {
+                      setTheme("light");
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    ☀️
+                  </button>
+
+                  <button
+                    title="Dark mode"
+                    className="cursor-pointer rounded p-1 text-lg hover:bg-primary/10"
+                    onClick={() => {
+                      setTheme("dark");
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    🌑
+                  </button>
+                </div>
               </div>
-            )}
-            <button
-              className="font-label-md  dark:text-surface dark:border-surface active:scale-95 cursor-pointer border px-4 py-2 rounded transition-colors flex items-center gap-2"
-              onClick={handleLogout}
-            >
-              <FaPowerOff /> Logout
-            </button>
+            </div>
+
+            {/* Mobile Logout */}
+            <div className="px-3">
+              <button
+                className="mt-3 w-full text-sm dark:text-surface dark:border-surface active:scale-95 cursor-pointer border px-3 py-2.5 rounded transition-colors flex items-center justify-center gap-2"
+                onClick={handleLogout}
+              >
+                <FaPowerOff size={14} />
+                Logout
+              </button>
+            </div>
           </div>
         </header>
       )}
 
       {/** Admin Nav */}
       {auth && auth.role === "admin" && (
-        <header className="bg-surface dark:bg-on-surface border-b border-outline-variant flex justify-between items-center w-full px-margin-desktop py-4 sticky top-0 z-50">
-          <div className="flex items-center gap-8">
+        <header className="bg-surface dark:bg-on-surface border-b border-outline-variant w-full sticky top-0 z-50">
+          <div className="flex justify-between items-center w-full px-3 sm:px-6 lg:px-margin-desktop py-3 sm:py-4">
             {/* Logo */}
             <Link
               to="/dashboard"
-              className="flex items-center gap-2 text-primary dark:text-surface font-semibold text-xl"
+              className="flex items-center gap-1.5 sm:gap-2 text-primary dark:text-surface font-semibold text-base sm:text-xl"
             >
-              <span className="text-2xl">
+              <span className="text-xl sm:text-2xl">
                 <MdInventory />
               </span>
+
               <span>Retail Pro</span>
             </Link>
-          </div>
-          <nav className="hidden md:flex gap-6 md:items-center">
-            {/* <!-- Assuming standard navigation for a dashboard app, adapting given JSON structure conceptually --> */}
-            <NavLink
-              to="/dashboard"
-              className="text-primary dark:text-surface font-bold font-label-md pb-1 hover:scale-105 transition-all"
-            >
-              Dashboard
-            </NavLink>
-            <NavLink
-              to="/users"
-              className="text-primary dark:text-surface font-bold font-label-md pb-1 hover:scale-105 transition-all"
-            >
-              Cashiers
-            </NavLink>
-            <NavLink
-              to="/products"
-              className="text-primary dark:text-surface font-bold font-label-md pb-1 hover:scale-105 transition-all"
-            >
-              Products
-            </NavLink>
-            <NavLink
-              to="/sales"
-              className="text-primary dark:text-surface font-bold b-2 font-label-md pb-1 hover:scale-105 transition-all"
-            >
-              Sales
-            </NavLink>
-          </nav>
 
-          <div className="flex items-center gap-10">
-            {!showSettings && (
-              <IoSettingsOutline
-                className="cursor-pointer dark:text-surface"
-                title="Settings"
-                size={20}
-                onClick={() => setShowSettings(true)}
-              />
-            )}
-            {showSettings && (
-              <div className="flex gap-5 dark:bg-on-surface">
-                <button
-                  title="Light mode"
-                  className="cursor-pointer text-xl"
-                  onClick={() => {
-                    setTheme("light");
-                    setShowSettings(false);
-                  }}
-                >
-                  ☀️
-                </button>
-                <button
-                  title="Dark mode"
-                  className="cursor-pointer text-xl"
-                  onClick={() => {
-                    setTheme("dark");
-                    setShowSettings(false);
-                  }}
-                >
-                  🌑
-                </button>
-              </div>
-            )}
+            {/* Desktop Nav */}
+            <nav className="hidden md:flex gap-6 md:items-center">
+              <NavLink
+                to="/dashboard"
+                className="text-primary dark:text-surface font-bold font-label-md pb-1 hover:scale-105 transition-all"
+              >
+                Dashboard
+              </NavLink>
+
+              <NavLink
+                to="/users"
+                className="text-primary dark:text-surface font-bold font-label-md pb-1 hover:scale-105 transition-all"
+              >
+                Cashiers
+              </NavLink>
+
+              <NavLink
+                to="/products"
+                className="text-primary dark:text-surface font-bold font-label-md pb-1 hover:scale-105 transition-all"
+              >
+                Products
+              </NavLink>
+
+              <NavLink
+                to="/sales"
+                className="text-primary dark:text-surface font-bold font-label-md pb-1 hover:scale-105 transition-all"
+              >
+                Sales
+              </NavLink>
+            </nav>
+
+            {/* Desktop Actions */}
+            <div className="hidden md:flex items-center gap-6 lg:gap-10">
+              {!showSettings && (
+                <IoSettingsOutline
+                  className="cursor-pointer dark:text-surface"
+                  title="Settings"
+                  size={20}
+                  onClick={() => setShowSettings(true)}
+                />
+              )}
+
+              {showSettings && (
+                <div className="flex gap-5 dark:bg-on-surface">
+                  <button
+                    title="Light mode"
+                    className="cursor-pointer text-xl"
+                    onClick={() => {
+                      setTheme("light");
+                      setShowSettings(false);
+                    }}
+                  >
+                    ☀️
+                  </button>
+
+                  <button
+                    title="Dark mode"
+                    className="cursor-pointer text-xl"
+                    onClick={() => {
+                      setTheme("dark");
+                      setShowSettings(false);
+                    }}
+                  >
+                    🌑
+                  </button>
+                </div>
+              )}
+
+              <button
+                className="font-label-md dark:text-surface dark:border-surface active:scale-95 cursor-pointer border px-4 py-2 rounded transition-colors flex items-center gap-2"
+                onClick={handleLogout}
+              >
+                <FaPowerOff />
+                Logout
+              </button>
+            </div>
+
+            {/* Mobile Hamburger */}
             <button
-              className="font-label-md  dark:text-surface dark:border-surface active:scale-95 cursor-pointer border px-4 py-2 rounded transition-colors flex items-center gap-2"
-              onClick={handleLogout}
+              className="md:hidden text-primary dark:text-surface cursor-pointer p-1"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
-              <FaPowerOff /> Logout
+              {mobileMenuOpen ? <IoClose size={24} /> : <MdMenu size={26} />}
             </button>
+          </div>
+
+          {/* Admin Mobile Overlay */}
+          <div
+            onClick={() => setMobileMenuOpen(false)}
+            className={`md:hidden fixed inset-0 z-40 bg-black/40 transition-opacity duration-300 ${
+              mobileMenuOpen ? "visible opacity-100" : "invisible opacity-0"
+            }`}
+          />
+
+          {/* Admin Mobile Slide-in Nav */}
+          <div
+            className={`md:hidden fixed right-0 top-0 z-50 h-full w-[80%] max-w-xs bg-surface dark:bg-on-surface shadow-2xl transition-transform duration-300 ease-in-out ${
+              mobileMenuOpen ? "translate-x-0" : "translate-x-full"
+            }`}
+          >
+            {/* Mobile Header */}
+            <div className="flex items-center justify-between border-b border-outline-variant px-4 py-3">
+              <div className="flex items-center gap-2 text-primary dark:text-surface font-semibold text-base">
+                <MdInventory className="text-xl" />
+
+                <span>Retail Pro</span>
+              </div>
+
+              <button
+                onClick={() => setMobileMenuOpen(false)}
+                className="rounded p-1 text-primary dark:text-surface hover:bg-primary/10"
+              >
+                <IoClose size={24} />
+              </button>
+            </div>
+
+            {/* Admin Links */}
+            <nav className="flex flex-col gap-1 px-3 py-3">
+              <NavLink
+                to="/dashboard"
+                onClick={() => setMobileMenuOpen(false)}
+                className={({ isActive }) =>
+                  `rounded px-3 py-2.5 text-sm transition-colors ${
+                    isActive
+                      ? "bg-primary text-on-primary font-semibold"
+                      : "text-primary dark:text-surface hover:bg-primary/10"
+                  }`
+                }
+              >
+                Dashboard
+              </NavLink>
+
+              <NavLink
+                to="/users"
+                onClick={() => setMobileMenuOpen(false)}
+                className={({ isActive }) =>
+                  `rounded px-3 py-2.5 text-sm transition-colors ${
+                    isActive
+                      ? "bg-primary text-on-primary font-semibold"
+                      : "text-primary dark:text-surface hover:bg-primary/10"
+                  }`
+                }
+              >
+                Cashiers
+              </NavLink>
+
+              <NavLink
+                to="/products"
+                onClick={() => setMobileMenuOpen(false)}
+                className={({ isActive }) =>
+                  `rounded px-3 py-2.5 text-sm transition-colors ${
+                    isActive
+                      ? "bg-primary text-on-primary font-semibold"
+                      : "text-primary dark:text-surface hover:bg-primary/10"
+                  }`
+                }
+              >
+                Products
+              </NavLink>
+
+              <NavLink
+                to="/sales"
+                onClick={() => setMobileMenuOpen(false)}
+                className={({ isActive }) =>
+                  `rounded px-3 py-2.5 text-sm transition-colors ${
+                    isActive
+                      ? "bg-primary text-on-primary font-semibold"
+                      : "text-primary dark:text-surface hover:bg-primary/10"
+                  }`
+                }
+              >
+                Sales
+              </NavLink>
+            </nav>
+
+            {/* Mobile Settings */}
+            <div className="mx-3 border-t border-outline-variant pt-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-on-surface-variant dark:text-surface">
+                  Theme
+                </span>
+
+                <div className="flex gap-2">
+                  <button
+                    title="Light mode"
+                    className="cursor-pointer rounded p-1 text-lg hover:bg-primary/10"
+                    onClick={() => {
+                      setTheme("light");
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    ☀️
+                  </button>
+
+                  <button
+                    title="Dark mode"
+                    className="cursor-pointer rounded p-1 text-lg hover:bg-primary/10"
+                    onClick={() => {
+                      setTheme("dark");
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    🌑
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Mobile Logout */}
+            <div className="px-3">
+              <button
+                className="mt-3 w-full text-sm dark:text-surface dark:border-surface active:scale-95 cursor-pointer border px-3 py-2.5 rounded transition-colors flex items-center justify-center gap-2"
+                onClick={handleLogout}
+              >
+                <FaPowerOff size={14} />
+                Logout
+              </button>
+            </div>
           </div>
         </header>
       )}

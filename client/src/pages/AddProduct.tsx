@@ -58,15 +58,16 @@ export default function AddProduct() {
       supplier,
       category,
     };
-    console.log(product);
+
     try {
       const response = await api.post("/products", product);
       console.log(response);
+
       clearForm();
       toast.success("Product created successfully");
     } catch (error: any) {
       console.log(error);
-      toast.error(error?.response?.data?.message);
+      toast.error(error?.response?.data?.message || "Failed to create product");
     }
   };
 
@@ -79,63 +80,66 @@ export default function AddProduct() {
     setSupplier("");
     setCategory("");
   };
+
   return (
     <AdminLayout theme={theme}>
-      <Toaster position="top-right" richColors={true} />
-      <div className="min-h-full w-full px-3 py-5 sm:px-6 lg:px-8">
+      <Toaster position="top-right" richColors />
+
+      <main className="min-h-full w-full px-3 py-4 sm:px-6 sm:py-6 lg:px-8">
         <div className="mx-auto w-full max-w-4xl">
-          {/* Page header */}
-          <div className="mb-6 flex justify-between">
-            <div>
-              <h1 className="text-2xl font-bold dark:text-surface sm:text-3xl">
+          {/* Page Header */}
+          <header className="mb-5 flex flex-col gap-4 sm:mb-6 lg:flex-row lg:items-center lg:justify-between">
+            <div className="min-w-0 text-center">
+              <h1 className="text-2xl font-bold text-center lg:text-start dark:text-surface sm:text-3xl">
                 Add Product
               </h1>
+
               <p className="mt-1 text-sm dark:text-surface/60">
                 Add a new product to your inventory.
               </p>
             </div>
 
-            <div className="flex flex-wrap items-center gap-5">
-              {/* Add Category */}
+            {/* Header Actions */}
+            <div className="flex w-full flex-col gap-2 sm:flex-row lg:w-auto justify-center">
               <button
                 type="button"
-                onClick={() => navigate("/add-category")}
-                className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:opacity-90 active:scale-95 cursor-pointer"
-              >
-                + Add Category
-              </button>
-
-              {/* Go Back */}
-              <button
-                type="button"
-                className="rounded-lg border border-surface/30 px-4 py-2 text-sm font-medium text-surface-tint hover:border-surface-tint transition hover:bg-surface/10 active:scale-95 cursor-pointer"
                 onClick={() => navigate("/products")}
+                className="order-2 w-full rounded-lg border border-surface/30 px-4 py-2.5 text-sm font-medium text-surface-tint transition hover:border-surface-tint hover:bg-surface/10 active:scale-98 sm:order-1 sm:w-auto cursor-pointer"
               >
                 ← Back to Products
               </button>
-            </div>
-          </div>
 
-          {/* Form card */}
+              <button
+                type="button"
+                onClick={() => navigate("/add-category")}
+                className="order-1 w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:opacity-90 active:scale-[0.98] sm:order-2 sm:w-auto cursor-pointer"
+              >
+                + Add Category
+              </button>
+            </div>
+          </header>
+
+          {/* Form Card */}
           <form
             onSubmit={handleSubmit}
-            className="rounded-xl border border-surface/20 bg-surface-tint p-4 shadow-sm sm:p-6 lg:p-8"
+            className="w-full rounded-xl border border-surface/20 bg-surface-tint p-4 shadow-sm sm:p-6 lg:p-8"
           >
-            <div className="space-y-6">
-              {/* Basic information */}
+            <div className="space-y-7">
+              {/* Product Information */}
               <section>
-                <div className="mb-4">
-                  <h2 className="text-lg font-semibold text-surface">
+                <div className="mb-5">
+                  <h2 className="text-lg font-semibold text-surface sm:text-xl">
                     Product Information
                   </h2>
-                  <p className="text-sm text-surface/60">
+
+                  <p className="mt-1 text-sm text-surface/60">
                     Enter the basic details of your product.
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-                  {/* Name */}
-                  <div>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5">
+                  {/* Product Name */}
+                  <div className="sm:col-span-2">
                     <label
                       htmlFor="name"
                       className="mb-1.5 block text-sm font-medium text-surface"
@@ -151,7 +155,7 @@ export default function AddProduct() {
                       required
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      className="w-full rounded-lg border border-surface/30 bg-surface px-3 py-2.5 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+                      className="w-full rounded-lg border border-surface/30 bg-surface px-3 py-2.5 text-sm outline-none transition placeholder:text-surface/40 focus:border-primary focus:ring-2 focus:ring-primary/20 sm:text-base"
                     />
                   </div>
 
@@ -170,20 +174,19 @@ export default function AddProduct() {
                       value={category}
                       onChange={(e) => setCategory(e.target.value)}
                       required
-                      className="w-full rounded-lg border border-surface/30 bg-surface px-3 py-2.5 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+                      className="w-full min-w-0 rounded-lg border border-surface/30 bg-surface px-3 py-2.5 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20 sm:text-base"
                     >
                       <option value="" disabled>
                         Select a category
                       </option>
-                      {categories?.length < 1 ? (
-                        <option>No category available</option>
+
+                      {categories.length < 1 ? (
+                        <option value="" disabled>
+                          No category available
+                        </option>
                       ) : (
-                        categories?.map((category) => (
-                          <option
-                            value={category._id}
-                            key={category._id}
-                            onClick={() => setCategory(category._id)}
-                          >
+                        categories.map((category) => (
+                          <option value={category._id} key={category._id}>
                             {category.name}
                           </option>
                         ))
@@ -191,7 +194,42 @@ export default function AddProduct() {
                     </select>
                   </div>
 
-                  {/* Price */}
+                  {/* Supplier */}
+                  <div>
+                    <label
+                      htmlFor="supplier"
+                      className="mb-1.5 block text-sm font-medium text-surface"
+                    >
+                      Supplier
+                    </label>
+
+                    <select
+                      id="supplier"
+                      name="supplier"
+                      value={supplier}
+                      onChange={(e) => setSupplier(e.target.value)}
+                      required
+                      className="w-full min-w-0 rounded-lg border border-surface/30 bg-surface px-3 py-2.5 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20 sm:text-base"
+                    >
+                      <option value="" disabled>
+                        Select a supplier
+                      </option>
+
+                      {suppliers.length < 1 ? (
+                        <option value="" disabled>
+                          No supplier available
+                        </option>
+                      ) : (
+                        suppliers.map((supplier) => (
+                          <option key={supplier._id} value={supplier._id}>
+                            {supplier.name}
+                          </option>
+                        ))
+                      )}
+                    </select>
+                  </div>
+
+                  {/* Selling Price */}
                   <div>
                     <label
                       htmlFor="price"
@@ -210,7 +248,7 @@ export default function AddProduct() {
                       required
                       value={price}
                       onChange={(e) => setPrice(e.target.value)}
-                      className="w-full rounded-lg border border-surface/30 bg-surface px-3 py-2.5 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+                      className="w-full rounded-lg border border-surface/30 bg-surface px-3 py-2.5 text-sm outline-none transition placeholder:text-surface/40 focus:border-primary focus:ring-2 focus:ring-primary/20 sm:text-base"
                     />
                   </div>
 
@@ -233,12 +271,12 @@ export default function AddProduct() {
                       required
                       value={costprice}
                       onChange={(e) => setCostPrice(e.target.value)}
-                      className="w-full rounded-lg border border-surface/30 bg-surface px-3 py-2.5 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+                      className="w-full rounded-lg border border-surface/30 bg-surface px-3 py-2.5 text-sm outline-none transition placeholder:text-surface/40 focus:border-primary focus:ring-2 focus:ring-primary/20 sm:text-base"
                     />
                   </div>
 
                   {/* Quantity */}
-                  <div>
+                  <div className="sm:col-span-2">
                     <label
                       htmlFor="quantity"
                       className="mb-1.5 block text-sm font-medium text-surface"
@@ -256,46 +294,8 @@ export default function AddProduct() {
                       required
                       value={quantity}
                       onChange={(e) => setQuantity(e.target.value)}
-                      className="w-full rounded-lg border border-surface/30 bg-surface px-3 py-2.5 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
+                      className="w-full rounded-lg border border-surface/30 bg-surface px-3 py-2.5 text-sm outline-none transition placeholder:text-surface/40 focus:border-primary focus:ring-2 focus:ring-primary/20 sm:text-base"
                     />
-                  </div>
-
-                  {/* Supplier */}
-                  <div>
-                    <label
-                      htmlFor="supplier"
-                      className="mb-1.5 block text-sm font-medium text-surface"
-                    >
-                      Supplier
-                    </label>
-
-                    <select
-                      id="supplier"
-                      name="supplier"
-                      value={supplier}
-                      onChange={(e) => setSupplier(e.target.value)}
-                      required
-                      className="w-full rounded-lg border border-surface/30 bg-surface px-3 py-2.5 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20"
-                    >
-                      <option value="" disabled>
-                        Select a supplier
-                      </option>
-                      {suppliers?.length < 1 ? (
-                        <option value="" disabled>
-                          No supplier available
-                        </option>
-                      ) : (
-                        suppliers?.map((supplier) => (
-                          <option
-                            key={supplier._id}
-                            value={supplier._id}
-                            onClick={() => setSupplier(supplier._id)}
-                          >
-                            {supplier.name}
-                          </option>
-                        ))
-                      )}
-                    </select>
                   </div>
                 </div>
               </section>
@@ -316,23 +316,23 @@ export default function AddProduct() {
                   placeholder="Enter a description of the product..."
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="w-full rounded-lg border border-surface/30 bg-surface px-3 py-2.5 outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/20 resize-y"
+                  className="w-full resize-y rounded-lg border border-surface/30 bg-surface px-3 py-2.5 text-sm outline-none transition placeholder:text-surface/40 focus:border-primary focus:ring-2 focus:ring-primary/20 sm:text-base"
                 />
               </section>
 
               {/* Actions */}
-              <div className="flex flex-col-reverse gap-3 border-t border-surface/20 pt-5 sm:flex-row sm:justify-end">
+              <div className="flex flex-col gap-3 border-t border-surface/20 pt-5 sm:flex-row sm:justify-end">
                 <button
                   type="button"
-                  className="rounded-lg border border-surface/30 px-5 py-2.5 text-sm font-medium text-surface transition hover:bg-surface/10 cursor-pointer"
                   onClick={clearForm}
+                  className="order-2 w-full rounded-lg border border-surface/30 px-5 py-2.5 text-sm font-medium text-surface transition hover:bg-surface/10 active:scale-[0.98] sm:order-1 sm:w-auto"
                 >
                   Clear
                 </button>
 
                 <button
                   type="submit"
-                  className="rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-primary/30 cursor-pointer"
+                  className="order-1 w-full rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-primary/30 active:scale-[0.98] sm:order-2 sm:w-auto"
                 >
                   Add Product
                 </button>
@@ -340,7 +340,7 @@ export default function AddProduct() {
             </div>
           </form>
         </div>
-      </div>
+      </main>
     </AdminLayout>
   );
 }
