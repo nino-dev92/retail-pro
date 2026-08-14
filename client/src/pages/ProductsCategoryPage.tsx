@@ -1,17 +1,17 @@
 import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
-import type { Category, Product } from "../../types/types";
+import type { Category, Product } from "../types/types";
 import { IoIosAddCircleOutline } from "react-icons/io";
-import AdminLayout from "../../layouts/AdminLayout";
-import useAuth from "../../hooks/useAuth";
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-import SearchBar from "../../components/SearchBar";
-import Spinner from "../../utils/Spinner";
-import ProductCategory from "../../components/product/ProductCategory";
-import ProductsGrid from "../../components/product/ProductsGrid";
-import SummaryCard from "../../components/product/SummaryCard";
+import AdminLayout from "../layouts/AdminLayout";
+import useAuth from "../hooks/useAuth";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import SearchBar from "../components/SearchBar";
+import Spinner from "../utils/Spinner";
+import ProductCategory from "../components/product/ProductCategory";
+import ProductsGrid from "../components/product/ProductsGrid";
+import SummaryCard from "../components/product/SummaryCard";
 
-export default function CategoryProducts() {
+export default function ProductCategoryPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
     null,

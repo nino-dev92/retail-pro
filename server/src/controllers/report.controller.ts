@@ -13,10 +13,10 @@ export const salesReport = asyncHandler(async (req: Request, res: Response) => {
 
   const report = await reportService.getSalesReport(
     userId,
-    Number(page),
-    Number(limit),
     from as string,
     to as string,
+    Number(page),
+    Number(limit),
     Number(minTotal),
     Number(maxTotal),
   );
@@ -35,11 +35,11 @@ export const purchaseReport = asyncHandler(
     const limit = Number(req.query.limit) || 10;
 
     const report = await reportService.getPurchaseReport(
-      Number(page),
-      Number(limit),
       from as string,
       to as string,
       supplier as string,
+      Number(page),
+      Number(limit),
     );
 
     res.status(200).json({
@@ -57,10 +57,10 @@ export const refundReport = asyncHandler(
     const limit = Number(req.query.limit) || 10;
 
     const report = await reportService.getRefundReport(
-      Number(page),
-      Number(limit),
       from as string,
       to as string,
+      Number(page),
+      Number(limit),
     );
 
     res.status(200).json({
@@ -90,10 +90,10 @@ export const stockMovementReport = asyncHandler(
     const limit = Number(req.query.limit) || 10;
 
     const report = await reportService.getStockMovementReport(
-      Number(page),
-      Number(limit),
       from as string,
       to as string,
+      Number(page),
+      Number(limit),
     );
 
     res.status(200).json({

@@ -1,11 +1,11 @@
-import { type DashboardStats } from "../../../types/types";
+import { type DashboardStats } from "../../types/types";
 import { useState, useEffect } from "react";
-import useAuth from "../../../hooks/useAuth";
-import AdminLayout from "../../../layouts/AdminLayout";
-import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
-import SummaryCard from "../../../components/product/SummaryCard";
-import SalesChart from "../../../components/dashboard/SalesChart";
-import Spinner from "../../../utils/Spinner";
+import useAuth from "../../hooks/useAuth";
+import AdminLayout from "../../layouts/AdminLayout";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import SummaryCard from "../../components/product/SummaryCard";
+import SalesChart from "../../components/dashboard/SalesChart";
+import Spinner from "../../utils/Spinner";
 
 export default function AdminDashboard() {
   const { auth, theme, isLoading, setIsLoading } = useAuth();
@@ -57,7 +57,7 @@ export default function AdminDashboard() {
             <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 max-w-8xl mx-auto border border-primary-container p-5">
               <SummaryCard
                 title="Today's Revenue"
-                value={stats?.revenue as number}
+                value={`N${stats?.revenue.toLocaleString() ?? 0}`}
               />
 
               <SummaryCard

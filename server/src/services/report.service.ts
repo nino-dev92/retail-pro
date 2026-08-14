@@ -9,10 +9,10 @@ import { findAllPurchaseOrders } from "./purchaseOrder.service";
 
 export const getSalesReport = async (
   userId: string,
-  page = 1,
-  limit = 1,
   from: string,
   to: string,
+  page = 1,
+  limit = 1,
   minTotal?: number,
   maxTotal?: number,
 ) => {
@@ -30,11 +30,11 @@ export const getSalesReport = async (
 };
 
 export const getPurchaseReport = async (
-  page = 1,
-  limit = 1,
   from: string,
   to: string,
   supplier: string,
+  page = 1,
+  limit = 1,
 ) => {
   const purchaseReport = await findAllPurchaseOrders(
     page,
@@ -48,10 +48,10 @@ export const getPurchaseReport = async (
 };
 
 export const getRefundReport = async (
-  page = 1,
-  limit = 1,
   from: string,
   to: string,
+  page = 1,
+  limit = 1,
 ) => {
   const refundReports = await showAllRefunds(page, limit, from, to);
 
@@ -59,10 +59,10 @@ export const getRefundReport = async (
 };
 
 export const getStockMovementReport = async (
-  page = 1,
-  limit = 1,
   from: string,
   to: string,
+  page = 1,
+  limit = 1,
 ) => {
   const stockMovements = await getAllStockMovements(page, limit, from, to);
 

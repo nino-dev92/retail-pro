@@ -1,9 +1,9 @@
 import { useState, type FormEvent } from "react";
-import useAuth from "../hooks/useAuth";
+import useAuth from "../../hooks/useAuth";
 import { Link, useNavigate } from "react-router-dom";
-import apiAxios from "../api/apiAxios";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
+import apiAxios from "../../api/apiAxios";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
 import { toast, Toaster } from "sonner";
 
 export default function Signup() {

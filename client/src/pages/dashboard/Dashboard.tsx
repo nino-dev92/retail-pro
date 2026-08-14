@@ -1,6 +1,6 @@
-import AdminDashboard from "./admin/AdminDashboard";
-import CashierDashboard from "./cashier/CashierDashboard";
-import ManagerDashboard from "./manager/ManagerDashboard";
+import AdminDashboard from "./AdminDashboard";
+import CashierDashboard from "./CashierDashboard";
+import ManagerDashboard from "./ManagerDashboard";
 import useAuth from "../../hooks/useAuth";
 
 export default function Dashboard() {

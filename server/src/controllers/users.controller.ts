@@ -53,13 +53,24 @@ export const findUsersByRole = asyncHandler(
 
 export const UpdateUser = asyncHandler(async (req: Request, res: Response) => {
   const id = req.params.id as string;
-  const { update } = req.body;
 
-  const user = await userService.updateUser(id, update);
+  const user = await userService.updateUser(id, req.body);
 
   res.status(204).json({
     success: true,
     message: "User updated successfully",
     data: user,
+  });
+});
+
+export const deleteUser = asyncHandler(async (req: Request, res: Response) => {
+  const userId = req.user?.userId;
+  const workerId = req.params.id as string;
+
+  const deleteUser = await userService.deleteUser(userId as string, workerId);
+
+  return res.sendStatus(204).json({
+    success: true,
+    message: "User deleted successfully",
   });
 });

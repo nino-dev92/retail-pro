@@ -5,7 +5,7 @@ import useAuth from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { Toaster, toast } from "sonner";
 
-export default function AddCategory() {
+export default function AddCategoryPage() {
   const { theme } = useAuth();
   const navigate = useNavigate();
   const api = useAxiosPrivate();
