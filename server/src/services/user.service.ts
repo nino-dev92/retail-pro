@@ -51,3 +51,21 @@ export const updateUser = async (id: string, update: any) => {
 
   return updateUser;
 };
+
+export const deleteUser = async (userId: string, workerId: string) => {
+  const isValid = Types.ObjectId.isValid(userId);
+
+  if (!isValid) throw new ApiError("Invalid User", 422);
+
+  const user = await User.findById(userId);
+
+  if (!user) throw new ApiError("User not found", 404);
+
+  if (user.role !== "manager") throw new ApiError("Unauthorized", 403);
+
+  const deleteUser = await User.findByIdAndDelete(workerId);
+
+  console.log(deleteUser);
+
+  return deleteUser;
+};

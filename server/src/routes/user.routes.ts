@@ -34,4 +34,11 @@ router.patch(
   userController.UpdateUser,
 );
 
+router.delete(
+  "/:id",
+  verifyJWT,
+  authorizeRole(ROLES.MANAGER),
+  userController.deleteUser,
+);
+
 export default router;

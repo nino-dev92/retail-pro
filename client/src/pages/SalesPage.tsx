@@ -1,14 +1,13 @@
 import { useState, useEffect, useMemo } from "react";
-import AdminLayout from "../../layouts/AdminLayout";
-import useAuth from "../../hooks/useAuth";
-import useAxiosPrivate from "../../hooks/useAxiosPrivate";
-import type { RecentSale, DashboardStats, Refund } from "../../types/types";
-import SummaryCard from "../../components/product/SummaryCard";
-import SearchBar from "../../components/SearchBar";
-import Spinner from "../../utils/Spinner";
-import SalePieChart from "../../components/dashboard/PieChart";
+import AdminLayout from "../layouts/AdminLayout";
+import useAuth from "../hooks/useAuth";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import type { RecentSale, DashboardStats, Refund } from "../types/types";
+import SummaryCard from "../components/product/SummaryCard";
+import Spinner from "../utils/Spinner";
+import SalePieChart from "../components/dashboard/PieChart";
 
-export default function AdminSales() {
+export default function SalesPage() {
   const { theme } = useAuth();
   const api = useAxiosPrivate();
 
@@ -16,8 +15,6 @@ export default function AdminSales() {
   const [dashboard, setDashboard] = useState<DashboardStats | null>(null);
   const [refunds, setRefunds] = useState<Refund[] | null>(null);
   const [reports, setReports] = useState<any[] | null>(null);
-
-  const [search, setSearch] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const stats = dashboard?.stats;
@@ -101,7 +98,10 @@ export default function AdminSales() {
               value={stats?.totalTransactions ?? 0}
             />
 
-            <SummaryCard title="Today's Revenue" value={stats?.revenue ?? 0} />
+            <SummaryCard
+              title="Today's Revenue"
+              value={`N${stats?.revenue.toLocaleString() ?? 0}`}
+            />
 
             <SummaryCard title="Total Refunds" value={refunds?.length ?? 0} />
           </section>

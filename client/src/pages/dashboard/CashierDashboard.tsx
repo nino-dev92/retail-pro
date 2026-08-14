@@ -1,15 +1,15 @@
 import { useEffect, useState, useMemo } from "react";
-import useAuth from "../../../hooks/useAuth";
-import Header from "../../../components/Header";
-import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
-import ProductsGrid from "../../../components/product/ProductsGrid";
-import SummaryCard from "../../../components/product/SummaryCard";
-import ProductCategory from "../../../components/product/ProductCategory";
-import Modal from "../../../components/ConfirmSaleModal";
+import useAuth from "../../hooks/useAuth";
+import Header from "../../components/Header";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import ProductsGrid from "../../components/product/ProductsGrid";
+import SummaryCard from "../../components/product/SummaryCard";
+import ProductCategory from "../../components/product/ProductCategory";
+import Modal from "../../components/ConfirmSaleModal";
 import { Toaster, toast } from "sonner";
-import type { Product, CartItem, Category } from "../../../types/types";
-import SearchBar from "../../../components/SearchBar";
-import Spinner from "../../../utils/Spinner";
+import type { Product, CartItem, Category } from "../../types/types";
+import SearchBar from "../../components/SearchBar";
+import Spinner from "../../utils/Spinner";
 
 export default function CashierDashboard() {
   const { auth, theme, isLoading, setIsLoading } = useAuth();

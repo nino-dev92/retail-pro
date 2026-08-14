@@ -32,11 +32,13 @@ export default function SalesChart({
   salesData,
   revenueData,
 }: SalesChartProps) {
-  const { theme } = useAuth();
+  const { theme, auth } = useAuth();
   return (
-    <div>
+    <div
+      className={`${auth?.role === "manager" ? "md:grid md:grid-cols-2 gap-2" : ""} mt-5`}
+    >
       {/** Line Chart */}
-      <div className="bg-surface dark:bg-primary border border-outline-variant rounded-lg p-5 my-2">
+      <div className="bg-surface dark:bg-primary border w-full border-outline-variant rounded-lg p-5 my-2">
         <div className="mb-5">
           <h2 className="text-lg font-bold dark:text-surface">
             Sales Overview

@@ -620,6 +620,307 @@ export default function Header() {
           </div>
         </header>
       )}
+
+      {/**Manager Nav */}
+      {auth && auth.role === "manager" && (
+        <header className="bg-surface dark:bg-on-surface border-b border-outline-variant w-full sticky top-0 z-50">
+          <div className="flex justify-between items-center w-full px-3 sm:px-6 lg:px-margin-desktop py-3 sm:py-4">
+            {/* Logo */}
+            <Link
+              to="/dashboard"
+              className="flex items-center gap-1.5 sm:gap-2 text-primary dark:text-surface font-semibold text-base sm:text-xl"
+            >
+              <span className="text-xl sm:text-2xl">
+                <MdInventory />
+              </span>
+
+              <span>Retail Pro</span>
+            </Link>
+
+            {/* Desktop Nav */}
+            <nav className="hidden md:flex gap-6 md:items-center">
+              <NavLink
+                to="/dashboard"
+                className="text-primary dark:text-surface font-bold font-label-md pb-1 hover:scale-105 transition-all"
+              >
+                Dashboard
+              </NavLink>
+
+              <NavLink
+                to="/users"
+                className="text-primary dark:text-surface font-bold font-label-md pb-1 hover:scale-105 transition-all"
+              >
+                Staff
+              </NavLink>
+
+              <NavLink
+                to="/products"
+                className="text-primary dark:text-surface font-bold font-label-md pb-1 hover:scale-105 transition-all"
+              >
+                Products
+              </NavLink>
+
+              <NavLink
+                to="/"
+                className="text-primary dark:text-surface font-bold font-label-md pb-1 hover:scale-105 transition-all"
+              >
+                Suppliers
+              </NavLink>
+
+              <NavLink
+                to="/sales"
+                className="text-primary dark:text-surface font-bold font-label-md pb-1 hover:scale-105 transition-all"
+              >
+                Sales
+              </NavLink>
+
+              <NavLink
+                to="/"
+                className="text-primary dark:text-surface font-bold font-label-md pb-1 hover:scale-105 transition-all"
+              >
+                Purchase Orders
+              </NavLink>
+
+              <NavLink
+                to="/"
+                className="text-primary dark:text-surface font-bold font-label-md pb-1 hover:scale-105 transition-all"
+              >
+                Stock
+              </NavLink>
+            </nav>
+
+            {/* Desktop Actions */}
+            <div className="hidden md:flex items-center gap-6 lg:gap-10">
+              {!showSettings && (
+                <IoSettingsOutline
+                  className="cursor-pointer dark:text-surface"
+                  title="Settings"
+                  size={20}
+                  onClick={() => setShowSettings(true)}
+                />
+              )}
+
+              {showSettings && (
+                <div className="flex gap-5 dark:bg-on-surface">
+                  <button
+                    title="Light mode"
+                    className="cursor-pointer text-xl"
+                    onClick={() => {
+                      setTheme("light");
+                      setShowSettings(false);
+                    }}
+                  >
+                    ☀️
+                  </button>
+
+                  <button
+                    title="Dark mode"
+                    className="cursor-pointer text-xl"
+                    onClick={() => {
+                      setTheme("dark");
+                      setShowSettings(false);
+                    }}
+                  >
+                    🌑
+                  </button>
+                </div>
+              )}
+
+              <button
+                className="font-label-md dark:text-surface dark:border-surface active:scale-95 cursor-pointer border px-4 py-2 rounded transition-colors flex items-center gap-2"
+                onClick={handleLogout}
+              >
+                <FaPowerOff />
+                Logout
+              </button>
+            </div>
+
+            {/* Mobile Hamburger */}
+            <button
+              className="md:hidden text-primary dark:text-surface cursor-pointer p-1"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              {mobileMenuOpen ? <IoClose size={24} /> : <MdMenu size={26} />}
+            </button>
+          </div>
+
+          {/* Admin Mobile Overlay */}
+          <div
+            onClick={() => setMobileMenuOpen(false)}
+            className={`md:hidden fixed inset-0 z-40 bg-black/40 transition-opacity duration-300 ${
+              mobileMenuOpen ? "visible opacity-100" : "invisible opacity-0"
+            }`}
+          />
+
+          {/* Admin Mobile Slide-in Nav */}
+          <div
+            className={`md:hidden fixed right-0 top-0 z-50 h-full w-[80%] max-w-xs bg-surface dark:bg-on-surface shadow-2xl transition-transform duration-300 ease-in-out ${
+              mobileMenuOpen ? "translate-x-0" : "translate-x-full"
+            }`}
+          >
+            {/* Mobile Header */}
+            <div className="flex items-center justify-between border-b border-outline-variant px-4 py-3">
+              <div className="flex items-center gap-2 text-primary dark:text-surface font-semibold text-base">
+                <MdInventory className="text-xl" />
+
+                <span>Retail Pro</span>
+              </div>
+
+              <button
+                onClick={() => setMobileMenuOpen(false)}
+                className="rounded p-1 text-primary dark:text-surface hover:bg-primary/10"
+              >
+                <IoClose size={24} />
+              </button>
+            </div>
+
+            {/* Admin Links */}
+            <nav className="flex flex-col gap-1 px-3 py-3">
+              <NavLink
+                to="/dashboard"
+                onClick={() => setMobileMenuOpen(false)}
+                className={({ isActive }) =>
+                  `rounded px-3 py-2.5 text-sm transition-colors ${
+                    isActive
+                      ? "bg-primary text-on-primary font-semibold"
+                      : "text-primary dark:text-surface hover:bg-primary/10"
+                  }`
+                }
+              >
+                Dashboard
+              </NavLink>
+
+              <NavLink
+                to="/users"
+                onClick={() => setMobileMenuOpen(false)}
+                className={({ isActive }) =>
+                  `rounded px-3 py-2.5 text-sm transition-colors ${
+                    isActive
+                      ? "bg-primary text-on-primary font-semibold"
+                      : "text-primary dark:text-surface hover:bg-primary/10"
+                  }`
+                }
+              >
+                Staff
+              </NavLink>
+
+              <NavLink
+                to="/products"
+                onClick={() => setMobileMenuOpen(false)}
+                className={({ isActive }) =>
+                  `rounded px-3 py-2.5 text-sm transition-colors ${
+                    isActive
+                      ? "bg-primary text-on-primary font-semibold"
+                      : "text-primary dark:text-surface hover:bg-primary/10"
+                  }`
+                }
+              >
+                Products
+              </NavLink>
+
+              <NavLink
+                to="/"
+                onClick={() => setMobileMenuOpen(false)}
+                className={({ isActive }) =>
+                  `rounded px-3 py-2.5 text-sm transition-colors ${
+                    isActive
+                      ? "bg-primary text-on-primary font-semibold"
+                      : "text-primary dark:text-surface hover:bg-primary/10"
+                  }`
+                }
+              >
+                Suppliers
+              </NavLink>
+
+              <NavLink
+                to="/sales"
+                onClick={() => setMobileMenuOpen(false)}
+                className={({ isActive }) =>
+                  `rounded px-3 py-2.5 text-sm transition-colors ${
+                    isActive
+                      ? "bg-primary text-on-primary font-semibold"
+                      : "text-primary dark:text-surface hover:bg-primary/10"
+                  }`
+                }
+              >
+                Sales
+              </NavLink>
+
+              <NavLink
+                to="/"
+                onClick={() => setMobileMenuOpen(false)}
+                className={({ isActive }) =>
+                  `rounded px-3 py-2.5 text-sm transition-colors ${
+                    isActive
+                      ? "bg-primary text-on-primary font-semibold"
+                      : "text-primary dark:text-surface hover:bg-primary/10"
+                  }`
+                }
+              >
+                Purchase Orders
+              </NavLink>
+
+              <NavLink
+                to="/"
+                onClick={() => setMobileMenuOpen(false)}
+                className={({ isActive }) =>
+                  `rounded px-3 py-2.5 text-sm transition-colors ${
+                    isActive
+                      ? "bg-primary text-on-primary font-semibold"
+                      : "text-primary dark:text-surface hover:bg-primary/10"
+                  }`
+                }
+              >
+                Stock
+              </NavLink>
+            </nav>
+
+            {/* Mobile Settings */}
+            <div className="mx-3 border-t border-outline-variant pt-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-on-surface-variant dark:text-surface">
+                  Theme
+                </span>
+
+                <div className="flex gap-2">
+                  <button
+                    title="Light mode"
+                    className="cursor-pointer rounded p-1 text-lg hover:bg-primary/10"
+                    onClick={() => {
+                      setTheme("light");
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    ☀️
+                  </button>
+
+                  <button
+                    title="Dark mode"
+                    className="cursor-pointer rounded p-1 text-lg hover:bg-primary/10"
+                    onClick={() => {
+                      setTheme("dark");
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    🌑
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Mobile Logout */}
+            <div className="px-3">
+              <button
+                className="mt-3 w-full text-sm dark:text-surface dark:border-surface active:scale-95 cursor-pointer border px-3 py-2.5 rounded transition-colors flex items-center justify-center gap-2"
+                onClick={handleLogout}
+              >
+                <FaPowerOff size={14} />
+                Logout
+              </button>
+            </div>
+          </div>
+        </header>
+      )}
     </>
   );
 }
