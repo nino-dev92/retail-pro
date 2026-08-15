@@ -14,6 +14,7 @@ type RegisterDTO = {
   email: string;
   password: string;
   confirmPassword: string;
+  role: string;
 };
 
 type LoginDTO = {
@@ -22,7 +23,14 @@ type LoginDTO = {
 };
 
 export const registerUser = async (data: RegisterDTO) => {
-  const { firstName, lastName, email, password } = data;
+  const { firstName, lastName, email, password, role } = data;
+
+  let registeredRole: any;
+  if (role) {
+    if (role === "cashier") registeredRole = ROLES.CASHIER;
+    if (role === "manager") registeredRole = ROLES.MANAGER;
+    if (role === "admin") registeredRole = ROLES.ADMIN;
+  }
 
   await userValidationSchema.validateAsync(data);
 
@@ -35,7 +43,7 @@ export const registerUser = async (data: RegisterDTO) => {
     lastName,
     email,
     password,
-    role: ROLES.CASHIER,
+    role: registeredRole,
   });
 
   const accessToken = await generateAccessToken({

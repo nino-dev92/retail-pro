@@ -6,6 +6,7 @@ const userValidationSchema = Joi.object({
   email: Joi.string().trim().required().email().lowercase(),
   password: Joi.string().required().min(8),
   confirmPassword: Joi.string().valid(Joi.ref("password")).required(),
+  role: Joi.string(),
 });
 
 export default userValidationSchema;
