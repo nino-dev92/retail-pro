@@ -141,7 +141,7 @@ export default function SupplierPage() {
                           className="hover:bg-surface-container dark:hover:bg-slate-800 transition-colors"
                         >
                           <td className="p-4 border border-outline-variant text-on-surface dark:text-surface">
-                            {supplier.name}
+                            {supplier.name.toUpperCase() ?? "-"}
                           </td>
 
                           <td className="p-4 border border-outline-variant text-on-surface dark:text-surface">

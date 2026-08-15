@@ -111,56 +111,72 @@ export default function SalesPage() {
               <p className="text-center text-xl dark:text-surface">
                 Recent Sales
               </p>
+
+              {/**Sales table */}
               <div>
                 {sales && sales?.length < 0 ? (
                   <p className="dark:text-surface">No recent sales</p>
                 ) : (
                   <>
-                    <table className="w-full dark:text-surface">
-                      <thead className="gap-10 ">
-                        <tr className="text-center">
-                          <th className="border dark:border-surface">No.</th>
-                          <th className="border dark:border-surface">
-                            Invoice No.
-                          </th>
-                          <th className="border dark:border-surface">
-                            Cashier
-                          </th>
-                          <th className="border dark:border-surface">Amount</th>
-                          <th className="border dark:border-surface">
-                            Payment
-                          </th>
-                          <th className="border dark:border-surface">Date</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {sales?.map((sale, index) => (
-                          <tr
-                            key={sale._id}
-                            className="text-center hover:bg-slate-400 cursor-pointer"
-                          >
-                            <td className="border dark:border-surface">
-                              {index + 1}
-                            </td>
-                            <td className="border dark:border-surface">
-                              {sale.invoiceNum}
-                            </td>
-                            <td className="border dark:border-surface">
-                              {sale.cashier.firstName.toUpperCase()}
-                            </td>
-                            <td className="border dark:border-surface">
-                              {sale.total}
-                            </td>
-                            <td className="border dark:border-surface">
-                              {sale.paymentMethod}
-                            </td>
-                            <td className="border dark:border-surface">
-                              {new Date(sale.createdAt).toDateString()}
-                            </td>
+                    <div className="w-full overflow-x-auto">
+                      <table className="w-full min-w-175 dark:text-surface">
+                        <thead>
+                          <tr className="text-center">
+                            <th className="border px-4 py-3 whitespace-nowrap dark:border-surface">
+                              No.
+                            </th>
+                            <th className="border px-4 py-3 whitespace-nowrap dark:border-surface">
+                              Invoice No.
+                            </th>
+                            <th className="border px-4 py-3 whitespace-nowrap dark:border-surface">
+                              Cashier
+                            </th>
+                            <th className="border px-4 py-3 whitespace-nowrap dark:border-surface">
+                              Amount
+                            </th>
+                            <th className="border px-4 py-3 whitespace-nowrap dark:border-surface">
+                              Payment
+                            </th>
+                            <th className="border px-4 py-3 whitespace-nowrap dark:border-surface">
+                              Date
+                            </th>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                        </thead>
+
+                        <tbody>
+                          {sales?.map((sale, index) => (
+                            <tr
+                              key={sale._id}
+                              className="cursor-pointer text-center hover:bg-slate-400"
+                            >
+                              <td className="border px-4 py-3 whitespace-nowrap dark:border-surface">
+                                {index + 1}
+                              </td>
+
+                              <td className="border px-4 py-3 whitespace-nowrap dark:border-surface">
+                                {sale.invoiceNum}
+                              </td>
+
+                              <td className="border px-4 py-3 whitespace-nowrap dark:border-surface">
+                                {sale.cashier.firstName.toUpperCase()}
+                              </td>
+
+                              <td className="border px-4 py-3 whitespace-nowrap dark:border-surface">
+                                {sale.total}
+                              </td>
+
+                              <td className="border px-4 py-3 whitespace-nowrap dark:border-surface">
+                                {sale.paymentMethod}
+                              </td>
+
+                              <td className="border px-4 py-3 whitespace-nowrap dark:border-surface">
+                                {new Date(sale.createdAt).toDateString()}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
                   </>
                 )}
               </div>

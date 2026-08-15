@@ -23,8 +23,11 @@ export default function AddSupplierPage() {
     try {
       await api.post("/supplier", data);
       toast.success("Supplier added successfully");
-    } catch (error) {
+      clearForm();
+      navigate(-1);
+    } catch (error: any) {
       console.log(error);
+      toast.error(error?.response?.data?.message);
     }
   };
 
@@ -42,24 +45,22 @@ export default function AddSupplierPage() {
       <main className="min-h-full w-full px-3 py-4 sm:px-6 sm:py-6 lg:px-8">
         <div className="mx-auto w-full max-w-4xl">
           {/* Page Header */}
-          <header className="mb-5 flex flex-col gap-4 sm:mb-6 lg:flex-row lg:items-center lg:justify-between">
-            <div className="min-w-0 text-center">
-              <div>
-                {" "}
-                <h1 className="text-2xl font-bold text-center lg:text-start dark:text-surface sm:text-3xl">
-                  Add Supplier
-                </h1>
-                <p className="mt-1 text-sm dark:text-surface/60 lg:text-start">
-                  Add a new supplier.
-                </p>
-              </div>
+          <header className="mb-5 flex items-center justify-between gap-4 sm:mb-6">
+            <div className="min-w-0">
+              <h1 className="text-2xl font-bold dark:text-surface sm:text-3xl">
+                Add Supplier
+              </h1>
+
+              <p className="mt-1 text-sm dark:text-surface/60">
+                Add a new supplier.
+              </p>
             </div>
-            {/* Header Actions */}
-            <div className="flex w-full flex-col gap-2 sm:flex-row lg:w-auto justify-center">
+
+            <div className="flex shrink-0 justify-end">
               <button
                 type="button"
                 onClick={() => navigate(-1)}
-                className="order-2 w-full rounded-lg border border-surface/30 px-4 py-2.5 text-sm font-medium text-surface-tint transition hover:border-surface-tint hover:bg-surface/10 active:scale-98 sm:order-1 sm:w-auto cursor-pointer"
+                className="rounded-lg border border-surface/30 px-4 py-2.5 text-sm font-medium text-surface-tint transition hover:border-surface-tint hover:bg-surface/10 active:scale-98 cursor-pointer"
               >
                 ← Back
               </button>
@@ -72,7 +73,7 @@ export default function AddSupplierPage() {
             className="w-full rounded-xl border border-surface/20 bg-surface-tint p-4 shadow-sm sm:p-6 lg:p-8"
           >
             <div className="space-y-7">
-              {/* Product Information */}
+              {/* Supplier Information */}
               <section>
                 <div className="mb-5">
                   <h2 className="text-lg font-semibold text-surface sm:text-xl">
@@ -196,14 +197,14 @@ export default function AddSupplierPage() {
                 <button
                   type="button"
                   onClick={clearForm}
-                  className="order-2 w-full rounded-lg border border-surface/30 px-5 py-2.5 text-sm font-medium text-surface transition hover:bg-surface/10 active:scale-[0.98] sm:order-1 sm:w-auto"
+                  className="order-2 w-full rounded-lg border border-surface/30 px-5 py-2.5 text-sm font-medium text-surface transition hover:bg-surface/10 active:scale-[0.98] sm:order-1 sm:w-auto cursor-pointer"
                 >
                   Clear
                 </button>
 
                 <button
                   type="submit"
-                  className="order-1 w-full rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-primary/30 active:scale-[0.98] sm:order-2 sm:w-auto"
+                  className="order-1 w-full rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-primary/30 active:scale-[0.98] sm:order-2 sm:w-auto cursor-pointer"
                 >
                   Add Supplier
                 </button>

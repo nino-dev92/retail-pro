@@ -13,20 +13,20 @@ export default function Footer() {
         </div>
         <div className="flex flex-wrap justify-center gap-6">
           <Link
-            to="/dashboard"
+            to=""
             className="font-label-sm text-label-sm text-on-surface-variant hover:underline transition-all opacity-80 hover:opacity-100"
           >
             Privacy Policy
           </Link>
           <Link
-            to="/dashboard"
+            to=""
             className="font-label-sm text-label-sm text-on-surface-variant hover:underline transition-all opacity-80 hover:opacity-100"
           >
             Terms of Service
           </Link>
 
           <Link
-            to="/dashboard"
+            to=""
             className="font-label-sm text-label-sm text-on-surface-variant hover:underline transition-all opacity-80 hover:opacity-100"
           >
             About
