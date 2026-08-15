@@ -1,7 +1,7 @@
 import { useState } from "react";
-import AdminLayout from "../layouts/AdminLayout";
-import useAxiosPrivate from "../hooks/useAxiosPrivate";
-import useAuth from "../hooks/useAuth";
+import AdminLayout from "../../layouts/AdminLayout";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import useAuth from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { Toaster, toast } from "sonner";
 

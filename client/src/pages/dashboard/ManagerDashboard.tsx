@@ -13,7 +13,6 @@ export default function ManagerDashboard() {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [dashboard, setDashboard] = useState<DashboardStats | null>(null);
-  const [reports, setReports] = useState<any[]>([]);
 
   const salesOverview = dashboard?.charts.salesByDay ?? [];
   const revenueData = dashboard?.charts.revenueByMonth ?? [];
@@ -37,20 +36,7 @@ export default function ManagerDashboard() {
       }
     };
 
-    const getReports = async () => {
-      try {
-        const response = await api.get("/reports/purchases");
-        const data = response.data?.data;
-        setReports(data);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     getDashboardStats();
-    getReports();
   }, []);
 
   const totalInventoryValue =
@@ -82,32 +68,40 @@ export default function ManagerDashboard() {
             <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 max-w-8xl mx-auto border border-primary-container p-5">
               <SummaryCard
                 title="Today's Revenue"
-                value={`N${stats?.revenue as number}`}
+                value={`N${(stats?.revenue as number) ?? "-"}`}
               />
 
               <SummaryCard
                 title={`${new Date().toLocaleString("en-US", {
                   month: "long",
                 })} Revenue`}
-                value={`N${Number(thisMonthRevenue?.revenue).toLocaleString() ?? 0}`}
+                value={`N${Number(thisMonthRevenue?.revenue).toLocaleString() ?? "-"}`}
               />
               <SummaryCard
                 title="Today Sales"
-                value={stats?.itemsSold as number}
+                value={(stats?.itemsSold as number) ?? "-"}
               />
 
               <SummaryCard
                 title="Today's Transactions"
-                value={stats?.totalTransactions as number}
+                value={(stats?.totalTransactions as number) ?? "-"}
               />
 
               <SummaryCard
                 title="Total Products In Stock"
-                value={stats?.totalProducts as number}
+                value={(stats?.totalProducts as number) ?? "-"}
               />
               <SummaryCard
                 title="Total Inventory Value"
-                value={`N${Number(totalInventoryValue).toLocaleString() ?? 0}`}
+                value={`N${Number(totalInventoryValue).toLocaleString() ?? "-"}`}
+              />
+
+              <SummaryCard
+                title="Top Selling"
+                value={
+                  (dashboard?.products.topSellingProducts[0].name as string) ??
+                  "-"
+                }
               />
 
               <SummaryCard

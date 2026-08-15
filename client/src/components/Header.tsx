@@ -10,6 +10,7 @@ export default function Header() {
 
   const [showSettings, setShowSettings] = useState<boolean>(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
+  const [inventoryOpen, setInventoryOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -661,7 +662,7 @@ export default function Header() {
               </NavLink>
 
               <NavLink
-                to="/"
+                to="/supplier"
                 className="text-primary dark:text-surface font-bold font-label-md pb-1 hover:scale-105 transition-all"
               >
                 Suppliers
@@ -674,19 +675,41 @@ export default function Header() {
                 Sales
               </NavLink>
 
-              <NavLink
-                to="/"
-                className="text-primary dark:text-surface font-bold font-label-md pb-1 hover:scale-105 transition-all"
-              >
-                Purchase Orders
-              </NavLink>
+              <div className="group flex flex-col relative">
+                <button className="text-primary dark:text-surface font-bold font-label-md pb-1 hover:scale-105 transition-all cursor-pointer">
+                  Inventory
+                </button>
 
-              <NavLink
-                to="/"
-                className="text-primary dark:text-surface font-bold font-label-md pb-1 hover:scale-105 transition-all"
-              >
-                Stock
-              </NavLink>
+                <div className="invisible opacity-0 absolute top-5 mt-2 flex min-w-44 flex-col gap-1 border border-outline-variant bg-surface-container-lowest dark:bg-on-surface text-on-surface dark:text-surface p-2 rounded-lg shadow-lg transition-all duration-400 group-hover:visible group-hover:opacity-100">
+                  <Link
+                    to="/purchase-orders"
+                    className="px-3 py-2 rounded-md hover:bg-surface-container dark:hover:bg-slate-800 transition-colors"
+                  >
+                    Purchase Orders
+                  </Link>
+
+                  <Link
+                    to="/stock"
+                    className="px-3 py-2 rounded-md hover:bg-surface-container dark:hover:bg-slate-800 transition-colors"
+                  >
+                    Stock
+                  </Link>
+
+                  <Link
+                    to="/stock-movement"
+                    className="px-3 py-2 rounded-md hover:bg-surface-container dark:hover:bg-slate-800 transition-colors"
+                  >
+                    Stock Movement
+                  </Link>
+
+                  <Link
+                    to="/refunds"
+                    className="px-3 py-2 rounded-md hover:bg-surface-container dark:hover:bg-slate-800 transition-colors"
+                  >
+                    Refunds
+                  </Link>
+                </div>
+              </div>
             </nav>
 
             {/* Desktop Actions */}
@@ -819,7 +842,7 @@ export default function Header() {
               </NavLink>
 
               <NavLink
-                to="/"
+                to="/supplier"
                 onClick={() => setMobileMenuOpen(false)}
                 className={({ isActive }) =>
                   `rounded px-3 py-2.5 text-sm transition-colors ${
@@ -846,37 +869,108 @@ export default function Header() {
                 Sales
               </NavLink>
 
-              <NavLink
-                to="/"
-                onClick={() => setMobileMenuOpen(false)}
-                className={({ isActive }) =>
-                  `rounded px-3 py-2.5 text-sm transition-colors ${
-                    isActive
-                      ? "bg-primary text-on-primary font-semibold"
-                      : "text-primary dark:text-surface hover:bg-primary/10"
-                  }`
-                }
+              {/* Inventory */}
+              <div
+                className="mt-1"
+                onMouseEnter={() => setInventoryOpen(true)}
+                onMouseLeave={() => setInventoryOpen(false)}
               >
-                Purchase Orders
-              </NavLink>
+                <button
+                  type="button"
+                  onClick={() => setInventoryOpen((prev) => !prev)}
+                  className="w-full flex items-center justify-between rounded px-3 py-2.5 text-sm font-semibold text-primary dark:text-surface hover:bg-primary/10 transition-colors"
+                >
+                  <span>Inventory</span>
 
-              <NavLink
-                to="/"
-                onClick={() => setMobileMenuOpen(false)}
-                className={({ isActive }) =>
-                  `rounded px-3 py-2.5 text-sm transition-colors ${
-                    isActive
-                      ? "bg-primary text-on-primary font-semibold"
-                      : "text-primary dark:text-surface hover:bg-primary/10"
-                  }`
-                }
-              >
-                Stock
-              </NavLink>
+                  <span
+                    className={`transition-transform duration-200 ${
+                      inventoryOpen ? "rotate-180" : ""
+                    }`}
+                  >
+                    ▾
+                  </span>
+                </button>
+
+                <div
+                  className={`ml-3 border-l border-outline-variant pl-2 overflow-hidden transition-all duration-200 ${
+                    inventoryOpen
+                      ? "max-h-96 opacity-100 mt-1"
+                      : "max-h-0 opacity-0"
+                  }`}
+                >
+                  <NavLink
+                    to="/purchase-orders"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      setInventoryOpen(false);
+                    }}
+                    className={({ isActive }) =>
+                      `block rounded px-3 py-2.5 text-sm transition-colors ${
+                        isActive
+                          ? "bg-primary text-on-primary font-semibold"
+                          : "text-primary dark:text-surface hover:bg-primary/10"
+                      }`
+                    }
+                  >
+                    Purchase Orders
+                  </NavLink>
+
+                  <NavLink
+                    to="/stock"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      setInventoryOpen(false);
+                    }}
+                    className={({ isActive }) =>
+                      `block rounded px-3 py-2.5 text-sm transition-colors ${
+                        isActive
+                          ? "bg-primary text-on-primary font-semibold"
+                          : "text-primary dark:text-surface hover:bg-primary/10"
+                      }`
+                    }
+                  >
+                    Stock
+                  </NavLink>
+
+                  <NavLink
+                    to="/stock-movement"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      setInventoryOpen(false);
+                    }}
+                    className={({ isActive }) =>
+                      `block rounded px-3 py-2.5 text-sm transition-colors ${
+                        isActive
+                          ? "bg-primary text-on-primary font-semibold"
+                          : "text-primary dark:text-surface hover:bg-primary/10"
+                      }`
+                    }
+                  >
+                    Stock Movement
+                  </NavLink>
+
+                  <NavLink
+                    to="/refunds"
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      setInventoryOpen(false);
+                    }}
+                    className={({ isActive }) =>
+                      `block rounded px-3 py-2.5 text-sm transition-colors ${
+                        isActive
+                          ? "bg-primary text-on-primary font-semibold"
+                          : "text-primary dark:text-surface hover:bg-primary/10"
+                      }`
+                    }
+                  >
+                    Refunds
+                  </NavLink>
+                </div>
+              </div>
             </nav>
 
             {/* Mobile Settings */}
-            <div className="mx-3 border-t border-outline-variant pt-3">
+            <div className="mx-3 mt-1 border-t border-outline-variant pt-3">
               <div className="flex items-center justify-between">
                 <span className="text-sm text-on-surface-variant dark:text-surface">
                   Theme

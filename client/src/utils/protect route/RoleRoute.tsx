@@ -1,7 +1,7 @@
 import { useNavigate, Outlet, Navigate } from "react-router-dom";
-import useAuth from "../hooks/useAuth";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
+import useAuth from "../../hooks/useAuth";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
 
 type RoleRouteProps = {
   allowedRoles: string[];

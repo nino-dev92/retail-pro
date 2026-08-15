@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useAxiosPrivate from "../hooks/useAxiosPrivate";
-import AdminLayout from "../layouts/AdminLayout";
-import useAuth from "../hooks/useAuth";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import AdminLayout from "../../layouts/AdminLayout";
+import useAuth from "../../hooks/useAuth";
 import { Toaster, toast } from "sonner";
-import { type Category } from "../types/types";
+import type { Category } from "../../types/types";
 
 export default function AddProductPage() {
   const { theme } = useAuth();

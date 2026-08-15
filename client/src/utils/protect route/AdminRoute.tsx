@@ -1,7 +1,7 @@
 import { Outlet, useNavigate } from "react-router-dom";
-import useAuth from "../hooks/useAuth";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
+import useAuth from "../../hooks/useAuth";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
 
 const AdminRoute = () => {
   const { auth, theme } = useAuth();

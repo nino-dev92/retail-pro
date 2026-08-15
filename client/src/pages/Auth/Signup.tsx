@@ -9,23 +9,27 @@ import { toast, Toaster } from "sonner";
 export default function Signup() {
   const { theme } = useAuth();
   const navigate = useNavigate();
+
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [role, setRole] = useState<string>("");
 
   const handleSignup = async (e: FormEvent) => {
     e.preventDefault();
     if (password !== confirmPassword)
       return toast.warning("Password and Confirm password not the same");
+
     const reqBody = {
       firstName: firstName.trim().toLowerCase(),
       lastName: lastName.trim().toLowerCase(),
       email: email.trim().toLowerCase(),
       password,
       confirmPassword,
+      role,
     };
 
     try {
@@ -64,6 +68,7 @@ export default function Signup() {
               Join us. Create a new account
             </p>
           </div>
+
           <form className="space-y-6" onSubmit={handleSignup}>
             <div>
               <label
@@ -83,6 +88,7 @@ export default function Signup() {
                 onChange={(e) => setFirstName(e.target.value)}
               />
             </div>
+
             <div>
               <label
                 className="block font-body-sm text-body-sm text-on-surface dark:text-surface mb-1"
@@ -120,6 +126,7 @@ export default function Signup() {
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
+
             <div>
               <div className="flex justify-between items-center mb-1">
                 <label
@@ -129,6 +136,7 @@ export default function Signup() {
                   Password
                 </label>
               </div>
+
               <div className="flex items-center gap-2">
                 <input
                   className="w-full bg-surface-container-lowest border border-outline-variant rounded px-3 py-2 text-on-surface font-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
@@ -140,24 +148,27 @@ export default function Signup() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
+
                 <button
                   type="button"
-                  className="border max-h-fit p-1  bg-surface-container-lowest rounded-sm text-sm cursor-pointer"
+                  className="border max-h-fit p-1 bg-surface-container-lowest rounded-sm text-sm cursor-pointer"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword === false ? "show" : "hide"}
                 </button>
               </div>
             </div>
+
             <div>
               <div className="flex justify-between items-center mb-1">
                 <label
                   className="block font-body-sm text-body-sm text-on-surface dark:text-surface"
-                  htmlFor="password"
+                  htmlFor="confirmpassword"
                 >
                   Confirm Password
                 </label>
               </div>
+
               <div className="flex items-center gap-2">
                 <input
                   className="w-full bg-surface-container-lowest border border-outline-variant rounded px-3 py-2 text-on-surface font-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
@@ -171,6 +182,65 @@ export default function Signup() {
                 />
               </div>
             </div>
+
+            {/* Role */}
+            <div className="flex gap-5 place-items-centers">
+              <label
+                className="font-body-sm text-body-sm text-on-surface dark:text-surface mb-1"
+                htmlFor="role-cashier"
+              >
+                Role
+              </label>
+
+              <div className="flex flex-wrap items-center gap-6">
+                <label
+                  htmlFor="role-cashier"
+                  className="flex items-center gap-2 text-on-surface dark:text-surface cursor-pointer"
+                >
+                  <input
+                    type="radio"
+                    name="role"
+                    id="role-cashier"
+                    value="cashier"
+                    checked={role === "cashier"}
+                    onChange={(e) => setRole(e.target.value)}
+                    required
+                  />
+                  <span>Cashier</span>
+                </label>
+
+                <label
+                  htmlFor="role-admin"
+                  className="flex items-center gap-2 text-on-surface dark:text-surface cursor-pointer"
+                >
+                  <input
+                    type="radio"
+                    name="role"
+                    id="role-admin"
+                    value="admin"
+                    checked={role === "admin"}
+                    onChange={(e) => setRole(e.target.value)}
+                  />
+                  <span>Admin</span>
+                </label>
+
+                <label
+                  htmlFor="role-manager"
+                  className="flex items-center gap-2 text-on-surface dark:text-surface cursor-pointer"
+                >
+                  <input
+                    type="radio"
+                    name="role"
+                    id="role-manager"
+                    value="manager"
+                    checked={role === "manager"}
+                    onChange={(e) => setRole(e.target.value)}
+                  />
+                  <span>Manager</span>
+                </label>
+              </div>
+            </div>
+
             <button
               className="w-full bg-primary text-on-primary rounded py-2.5 font-label-md text-label-md cursor-pointer hover:bg-primary-container transition-colors scale-95 active:scale-90 duration-150"
               type="submit"
@@ -178,10 +248,12 @@ export default function Signup() {
               Create Account
             </button>
           </form>
+
           <div className="mt-6 text-center border-t border-outline-variant pt-6">
             <p className="font-body-sm text-body-sm text-on-surface-variant dark:text-surface mb-4">
               Already have an account?
             </p>
+
             <Link
               to="/login"
               className="block w-full border border-outline-variant text-on-surface dark:text-surface dark:hover:text-on-surface rounded py-2.5 font-label-md text-label-md hover:bg-surface-container transition-colors"

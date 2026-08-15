@@ -1,7 +1,7 @@
 import { Outlet, useNavigate } from "react-router-dom";
-import useAuth from "../hooks/useAuth";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
+import useAuth from "../../hooks/useAuth";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
 
 const ProtectManagerRoute = () => {
   const { auth, theme } = useAuth();
@@ -11,7 +11,7 @@ const ProtectManagerRoute = () => {
     navigate(-1);
   };
 
-  return auth?.role === "admin" ? (
+  return auth?.role === "manager" ? (
     <Outlet />
   ) : (
     <main className={`${theme}`}>

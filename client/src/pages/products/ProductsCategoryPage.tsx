@@ -1,15 +1,15 @@
 import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
-import type { Category, Product } from "../types/types";
+import type { Category, Product } from "../../types/types";
 import { IoIosAddCircleOutline } from "react-icons/io";
-import AdminLayout from "../layouts/AdminLayout";
-import useAuth from "../hooks/useAuth";
-import useAxiosPrivate from "../hooks/useAxiosPrivate";
-import SearchBar from "../components/SearchBar";
-import Spinner from "../utils/Spinner";
-import ProductCategory from "../components/product/ProductCategory";
-import ProductsGrid from "../components/product/ProductsGrid";
-import SummaryCard from "../components/product/SummaryCard";
+import AdminLayout from "../../layouts/AdminLayout";
+import useAuth from "../../hooks/useAuth";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
+import SearchBar from "../../components/SearchBar";
+import Spinner from "../../utils/Spinner";
+import ProductCategory from "../../components/product/ProductCategory";
+import ProductsGrid from "../../components/product/ProductsGrid";
+import SummaryCard from "../../components/product/SummaryCard";
 
 export default function ProductCategoryPage() {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -88,17 +88,28 @@ export default function ProductCategoryPage() {
 
       {!isLoading && (
         <div className="flex flex-col w-full gap-5 items-center p-3 sm:p-5">
-          <h1 className="text-2xl dark:text-surface text-center">Products</h1>
-          <section className="grid grid-cols-1 sm:grid-cols-3 gap-5 place-items-center text-center">
-            <SummaryCard title="Total Products" value={total.products} />
-            <SummaryCard title="Total Categories" value={total.categories} />
+          {/* Page Header */}
+          <div className="w-full flex items-center justify-between md:justify-center gap-4 relative">
+            <h1 className="text-2xl sm:text-3xl dark:text-surface text-left md:text-center">
+              Products
+            </h1>
+
             <Link
               to="/add-product"
               title="Add Product or Category"
-              className="cursor-pointer p-1 rounded-sm text-green-500 dark:border-on-surface justify-content-center border max-h-fit border-surface hover:border-green-500 active:scale-95 transition-all duration-200"
+              className="cursor-pointer flex items-center justify-center gap-1.5 sm:gap-2 px-3 py-2 sm:px-4 sm:py-2.5 rounded-lg text-green-500 dark:border-on-surface border border-surface hover:border-green-500 hover:bg-green-500/5 active:scale-95 transition-all duration-200 shrink-0 md:absolute md:right-0"
             >
-              <IoIosAddCircleOutline size={40} />
+              <span className="text-sm sm:text-base font-medium whitespace-nowrap">
+                Add Product
+              </span>
+
+              <IoIosAddCircleOutline className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8" />
             </Link>
+          </div>
+
+          <section className="grid grid-cols-1 sm:grid-cols-2 gap-5 text-center w-[80%]">
+            <SummaryCard title="Total Products" value={total.products} />
+            <SummaryCard title="Total Categories" value={total.categories} />
           </section>
 
           <section className="w-full flex-1 flex flex-col bg-surface-container-lowest dark:bg-on-surface border border-outline-variant rounded-lg overflow-hidden min-w-0 min-h-0">

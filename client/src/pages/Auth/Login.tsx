@@ -7,10 +7,11 @@ import Footer from "../../components/Footer";
 import { toast, Toaster } from "sonner";
 
 export default function Login() {
-  const { theme, auth, setAuth } = useAuth();
+  const { theme, setAuth } = useAuth();
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const navigate = useNavigate();
 
   const handlelogin = async (e: FormEvent) => {
     e.preventDefault();
@@ -102,6 +103,7 @@ export default function Login() {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
+
             <button
               className="w-full bg-primary text-on-primary rounded py-2.5 font-label-md text-label-md cursor-pointer hover:bg-primary-container transition-colors scale-95 active:scale-90 duration-150"
               type="submit"

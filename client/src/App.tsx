@@ -6,12 +6,14 @@ import Signup from "./pages/Auth/Signup";
 import Dashboard from "./pages/dashboard/Dashboard";
 import SalesPage from "./pages/SalesPage";
 import UsersPage from "./pages/UsersPage";
-import ProductCategoryPage from "./pages/ProductsCategoryPage";
-import ManagerRoute from "./utils/ManagerRoute";
-import AddProduct from "./pages/AddProductPage";
-import AddCategory from "./pages/AddCategoryPage";
-import AuthRoute from "./utils/AuthRoute";
-import RoleRoute from "./utils/RoleRoute";
+import ProductCategoryPage from "./pages/products/ProductsCategoryPage";
+import ManagerRoute from "./utils/protect route/ManagerRoute";
+import AddProductPage from "./pages/products/AddProductPage";
+import AddCategoryPage from "./pages/products/AddCategoryPage";
+import SupplierPage from "./pages/supplier/SupplierPage";
+import AddSupplierPage from "./pages/supplier/AddSupplierPage";
+import AuthRoute from "./utils/protect route/AuthRoute";
+import RoleRoute from "./utils/protect route/RoleRoute";
 import Spinner from "./utils/Spinner";
 
 function App() {
@@ -30,12 +32,15 @@ function App() {
       <Route element={<RoleRoute allowedRoles={["admin", "manager"]} />}>
         <Route path="/users" element={<UsersPage />} />
         <Route path="/products" element={<ProductCategoryPage />} />
-        <Route path="/add-product" element={<AddProduct />} />
-        <Route path="/add-category" element={<AddCategory />} />
+        <Route path="/add-product" element={<AddProductPage />} />
+        <Route path="/add-category" element={<AddCategoryPage />} />
         <Route path="/sales" element={<SalesPage />} />
       </Route>
 
-      <Route element={<ManagerRoute />}></Route>
+      <Route element={<ManagerRoute />}>
+        <Route path="/supplier" element={<SupplierPage />} />
+        <Route path="/add-supplier" element={<AddSupplierPage />} />
+      </Route>
     </Routes>
   );
 }
