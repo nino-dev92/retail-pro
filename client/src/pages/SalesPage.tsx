@@ -14,7 +14,6 @@ export default function SalesPage() {
   const [sales, setSales] = useState<RecentSale[] | null>([]);
   const [dashboard, setDashboard] = useState<DashboardStats | null>(null);
   const [refunds, setRefunds] = useState<Refund[] | null>(null);
-  const [reports, setReports] = useState<any[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const stats = dashboard?.stats;
@@ -25,18 +24,15 @@ export default function SalesPage() {
       setIsLoading(true);
 
       try {
-        const [getSales, getdashboardStats, getRefunds, getReports] =
-          await Promise.all([
-            api.get("/sales"),
-            api.get("/dashboard"),
-            api.get("/refund"),
-            api.get("/reports/summary"),
-          ]);
+        const [getSales, getdashboardStats, getRefunds] = await Promise.all([
+          api.get("/sales"),
+          api.get("/dashboard"),
+          api.get("/refund"),
+        ]);
 
         setSales(getSales?.data?.data);
         setDashboard(getdashboardStats?.data?.data);
         setRefunds(getRefunds?.data?.data);
-        setReports(getReports?.data?.data);
       } catch (error) {
         console.log(error);
       } finally {
