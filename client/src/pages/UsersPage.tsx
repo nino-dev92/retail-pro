@@ -14,22 +14,35 @@ export default function UsersPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+
   const [action, setAction] = useState<"verify" | "delete" | null>(null);
-  const [showSuccess, setShowSuccess] = useState(false);
+
+  // Stores the action that actually succeeded.
+  // This is separate from `action` because `action` is cleared
+  // when the confirmation modal is closed.
+  const [successAction, setSuccessAction] = useState<
+    "verify" | "delete" | null
+  >(null);
+
+  const [actionLoading, setActionLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const getUsers = async () => {
     setLoading(true);
 
     try {
       const response = await api.get(
-        `${auth.role === "admin" ? "/users/workers/cashier" : "/users"}`,
+        auth.role === "admin" ? "/users/workers/cashier" : "/users",
       );
+
       const data = response?.data?.data;
 
       setUsers(data ?? []);
     } catch (error) {
-      console.log(error);
+      console.error("Failed to fetch users:", error);
+      setUsers([]);
     } finally {
       setLoading(false);
     }
@@ -40,36 +53,107 @@ export default function UsersPage() {
   }, []);
 
   const filteredUsers = useMemo(() => {
-    return users.filter((user) => {
-      const query = search.trim().toLowerCase();
+    const query = search.trim().toLowerCase();
 
-      const firstName = user.firstName.toLowerCase();
-      const lastName = user.lastName.toLowerCase();
+    if (!query) {
+      return users;
+    }
+
+    return users.filter((user) => {
+      const firstName = user.firstName?.toLowerCase() ?? "";
+      const lastName = user.lastName?.toLowerCase() ?? "";
 
       return firstName.includes(query) || lastName.includes(query);
     });
   }, [users, search]);
 
   const verifyUser = async () => {
-    const update = {
-      isVerified: true,
-    };
+    if (!selectedUser?._id) {
+      return false;
+    }
 
     try {
-      const response = await api.patch(`/users/${selectedUser?._id}`, update);
-      console.log(response?.data);
+      await api.patch(`/users/${selectedUser._id}`, {
+        isVerified: true,
+      });
+
+      return true;
     } catch (error) {
-      console.log(error);
+      console.error("Failed to verify user:", error);
+      setErrorMessage("Failed to verify this user. Please try again.");
+
+      return false;
     }
   };
 
   const deleteUser = async () => {
-    try {
-      const response = await api.delete(`/users/${selectedUser?._id}`);
-      console.log(response?.data);
-    } catch (error) {
-      console.log(error);
+    if (!selectedUser?._id) {
+      return false;
     }
+
+    try {
+      await api.delete(`/users/${selectedUser._id}`);
+
+      return true;
+    } catch (error) {
+      console.error("Failed to delete user:", error);
+      setErrorMessage("Failed to delete this user. Please try again.");
+
+      return false;
+    }
+  };
+
+  const handleConfirmAction = async () => {
+    if (!action || !selectedUser) {
+      return;
+    }
+
+    setActionLoading(true);
+    setErrorMessage("");
+
+    const currentAction = action;
+
+    try {
+      const success =
+        currentAction === "verify" ? await verifyUser() : await deleteUser();
+
+      if (!success) {
+        return;
+      }
+
+      // Refresh the users list after the successful operation.
+      await getUsers();
+
+      // Close confirmation modal.
+      setAction(null);
+
+      // Store the successful action separately so the success
+      // modal knows whether to say "verified" or "deleted".
+      setSuccessAction(currentAction);
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  const closeSuccessModal = () => {
+    setSuccessAction(null);
+    setSelectedUser(null);
+  };
+
+  const closeUserModal = () => {
+    if (actionLoading) {
+      return;
+    }
+
+    setSelectedUser(null);
+  };
+
+  const closeActionModal = () => {
+    if (actionLoading) {
+      return;
+    }
+
+    setAction(null);
   };
 
   return (
@@ -93,7 +177,11 @@ export default function UsersPage() {
               <SearchBar
                 search={search}
                 setSearch={setSearch}
-                placeHolder={`${auth.role === "admin" ? "Search Cashier Name..." : "Search Worker Name..."}`}
+                placeHolder={
+                  auth.role === "admin"
+                    ? "Search Cashier Name..."
+                    : "Search Worker Name..."
+                }
               />
             </div>
           </div>
@@ -116,11 +204,11 @@ export default function UsersPage() {
             )}
           </section>
 
-          {/** User Modal */}
-          {selectedUser && (
+          {/* User Details Modal */}
+          {selectedUser && !action && !successAction && (
             <div
               className="fixed inset-0 z-40 flex items-center justify-center bg-black/40 p-4"
-              onClick={() => setSelectedUser(null)}
+              onClick={closeUserModal}
             >
               <section
                 className="w-full max-w-2xl rounded-lg bg-white p-4 shadow-xl sm:p-6"
@@ -153,23 +241,32 @@ export default function UsersPage() {
                 <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-end">
                   {!selectedUser.isVerified && (
                     <button
-                      onClick={() => setAction("verify")}
-                      className="rounded-lg bg-green-500 px-4 py-2 text-sm font-semibold text-white hover:bg-green-600 cursor-pointer active:scale-95"
+                      type="button"
+                      onClick={() => {
+                        setErrorMessage("");
+                        setAction("verify");
+                      }}
+                      className="cursor-pointer rounded-lg bg-green-500 px-4 py-2 text-sm font-semibold text-white hover:bg-green-600 active:scale-95"
                     >
                       Verify
                     </button>
                   )}
 
                   <button
-                    onClick={() => setAction("delete")}
-                    className="rounded-lg bg-red-500 px-4 py-2 text-sm font-semibold text-white hover:bg-red-600 cursor-pointer active:scale-95"
+                    type="button"
+                    onClick={() => {
+                      setErrorMessage("");
+                      setAction("delete");
+                    }}
+                    className="cursor-pointer rounded-lg bg-red-500 px-4 py-2 text-sm font-semibold text-white hover:bg-red-600 active:scale-95"
                   >
                     Delete
                   </button>
 
                   <button
-                    onClick={() => setSelectedUser(null)}
-                    className="rounded-lg border px-4 py-2 text-sm font-semibold cursor-pointer active:scale-95"
+                    type="button"
+                    onClick={closeUserModal}
+                    className="cursor-pointer rounded-lg border px-4 py-2 text-sm font-semibold active:scale-95"
                   >
                     Close
                   </button>
@@ -178,58 +275,67 @@ export default function UsersPage() {
             </div>
           )}
 
-          {/**Action Modal */}
-          {action && (
+          {/* Confirmation Modal */}
+          {action && selectedUser && (
             <div
               className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-              onClick={() => setAction(null)}
+              onClick={closeActionModal}
             >
               <section
                 className="w-full max-w-sm rounded-lg bg-white p-6 text-center shadow-xl"
                 onClick={(e) => e.stopPropagation()}
               >
-                <h2 className="text-xl font-bold">Confirm?</h2>
+                <h2 className="text-xl font-bold">
+                  {action === "verify" ? "Verify User?" : "Delete User?"}
+                </h2>
 
                 <p className="mt-2 text-sm text-gray-600">
                   Are you sure you want to{" "}
-                  {action === "verify" ? "verify" : "delete"} this user?
+                  {action === "verify" ? "verify" : "delete"}{" "}
+                  <span className="font-semibold">
+                    {selectedUser.firstName} {selectedUser.lastName}
+                  </span>
+                  ?
                 </p>
+
+                {errorMessage && (
+                  <p className="mt-4 rounded-md bg-red-50 px-3 py-2 text-sm text-red-600">
+                    {errorMessage}
+                  </p>
+                )}
 
                 <div className="mt-6 flex justify-center gap-3">
                   <button
-                    onClick={() => setAction(null)}
-                    className="rounded-lg border px-5 py-2 text-sm font-semibold cursor-pointer active:scale-95"
+                    type="button"
+                    onClick={closeActionModal}
+                    disabled={actionLoading}
+                    className="cursor-pointer rounded-lg border px-5 py-2 text-sm font-semibold active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     No
                   </button>
 
                   <button
-                    onClick={() => {
-                      action === "verify" ? verifyUser() : deleteUser();
-                      setAction(null);
-                      setShowSuccess(true);
-                    }}
-                    className={`rounded-lg px-5 py-2 text-sm font-semibold cursor-pointer active:scale-95 text-white ${
+                    type="button"
+                    onClick={handleConfirmAction}
+                    disabled={actionLoading}
+                    className={`cursor-pointer rounded-lg px-5 py-2 text-sm font-semibold text-white active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 ${
                       action === "delete"
                         ? "bg-red-500 hover:bg-red-600"
                         : "bg-green-500 hover:bg-green-600"
                     }`}
                   >
-                    Yes
+                    {actionLoading ? "Processing..." : "Yes"}
                   </button>
                 </div>
               </section>
             </div>
           )}
 
-          {/**Success Modal */}
-          {showSuccess && (
+          {/* Success Modal */}
+          {successAction && (
             <div
               className="fixed inset-0 z-60 flex items-center justify-center bg-black/40 p-4"
-              onClick={() => {
-                setShowSuccess(false);
-                getUsers();
-              }}
+              onClick={closeSuccessModal}
             >
               <section
                 className="w-full max-w-sm rounded-lg bg-white p-6 text-center shadow-xl"
@@ -242,17 +348,14 @@ export default function UsersPage() {
                 <h2 className="text-xl font-bold">Success</h2>
 
                 <p className="mt-2 text-sm text-gray-600">
-                  User {action === "verify" ? "verified" : "deleted"}
+                  User {successAction === "verify" ? "verified" : "deleted"}{" "}
                   successfully.
                 </p>
 
                 <button
-                  onClick={() => {
-                    setShowSuccess(false);
-                    setSelectedUser(null);
-                    getUsers();
-                  }}
-                  className="mt-5 rounded-lg bg-primary px-5 py-2 text-sm font-semibold text-white cursor-pointer active:scale-95"
+                  type="button"
+                  onClick={closeSuccessModal}
+                  className="mt-5 cursor-pointer rounded-lg bg-primary px-5 py-2 text-sm font-semibold text-white active:scale-95"
                 >
                   OK
                 </button>
