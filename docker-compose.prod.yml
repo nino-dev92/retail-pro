@@ -1,0 +1,16 @@
+services:
+  backend:
+    image: nino992/retail-pro-server:latest
+    container_name: retail-pro-server
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "5000:5000"
+
+  frontend:
+    image: nino992/retail-pro-client:latest
+    container_name: retail-pro-client
+    restart: unless-stopped
+    ports:
+      - "80:80"
