@@ -106,7 +106,7 @@ export default function ManagerDashboard() {
 
               <SummaryCard
                 title="Total Categories"
-                value={stats?.totalCategories as number}
+                value={(stats?.totalCategories as number) ?? "-"}
               />
             </section>
 
