@@ -57,22 +57,22 @@ export default function AdminDashboard() {
             <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 max-w-8xl mx-auto border border-primary-container p-5">
               <SummaryCard
                 title="Today's Revenue"
-                value={`N${stats?.revenue.toLocaleString() ?? 0}`}
+                value={`N${stats?.revenue.toLocaleString() ?? "-"}`}
               />
 
               <SummaryCard
                 title="Today Sales"
-                value={stats?.itemsSold as number}
+                value={(stats?.itemsSold as number) ?? "-"}
               />
 
               <SummaryCard
                 title="Today's Transactions"
-                value={stats?.totalTransactions as number}
+                value={(stats?.totalTransactions as number) ?? "-"}
               />
 
               <SummaryCard
                 title="Total Products In Stock"
-                value={stats?.totalProducts as number}
+                value={(stats?.totalProducts as number) ?? "-"}
               />
             </section>
 
@@ -85,20 +85,20 @@ export default function AdminDashboard() {
             <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 max-w-8xl mx-auto border border-primary-container p-5">
               <SummaryCard
                 title="Recent Sales"
-                value={stats?.recentSales.length as number}
+                value={(stats?.recentSales.length as number) ?? "-"}
               />
               <SummaryCard
                 title="Total Categories"
-                value={stats?.totalCategories as number}
+                value={(stats?.totalCategories as number) ?? "-"}
               />
               <SummaryCard
                 title="Low Stock Items"
-                value={stats?.lowStock as number}
+                value={(stats?.lowStock as number) ?? "-"}
               />
 
               <SummaryCard
                 title="Out Of Stock Items"
-                value={stats?.outOfStock as number}
+                value={(stats?.outOfStock as number) ?? "-"}
               />
             </section>
           </main>
