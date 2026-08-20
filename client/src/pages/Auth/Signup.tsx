@@ -100,7 +100,7 @@ export default function Signup() {
                 className="w-full bg-surface-container-lowest border border-outline-variant rounded px-3 py-2 text-on-surface font-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
                 id="lastName"
                 name="lastName"
-                placeholder="your first name...."
+                placeholder="your last name...."
                 required
                 type="text"
                 value={lastName}
@@ -184,18 +184,22 @@ export default function Signup() {
             </div>
 
             {/* Role */}
-            <div className="flex gap-5 place-items-centers">
-              <label
-                className="font-body-sm text-body-sm text-on-surface dark:text-surface mb-1"
-                htmlFor="role-cashier"
-              >
+            {/* Role */}
+            <div>
+              <label className="block font-body-sm text-body-sm text-on-surface dark:text-surface mb-2">
                 Role
               </label>
 
-              <div className="flex flex-wrap items-center gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {/* Cashier */}
                 <label
                   htmlFor="role-cashier"
-                  className="flex items-center gap-2 text-on-surface dark:text-surface cursor-pointer"
+                  className={`flex items-center gap-3 rounded-lg border p-3 cursor-pointer transition-all
+        ${
+          role === "cashier"
+            ? "border-primary bg-primary/10 ring-1 ring-primary"
+            : "border-outline-variant hover:bg-surface-container"
+        }`}
                 >
                   <input
                     type="radio"
@@ -205,13 +209,23 @@ export default function Signup() {
                     checked={role === "cashier"}
                     onChange={(e) => setRole(e.target.value)}
                     required
+                    className="h-4 w-4 accent-primary shrink-0"
                   />
-                  <span>Cashier</span>
+
+                  <span className="text-sm text-on-surface dark:text-surface">
+                    Cashier
+                  </span>
                 </label>
 
+                {/* Admin */}
                 <label
                   htmlFor="role-admin"
-                  className="flex items-center gap-2 text-on-surface dark:text-surface cursor-pointer"
+                  className={`flex items-center gap-3 rounded-lg border p-3 cursor-pointer transition-all
+        ${
+          role === "admin"
+            ? "border-primary bg-primary/10 ring-1 ring-primary"
+            : "border-outline-variant hover:bg-surface-container"
+        }`}
                 >
                   <input
                     type="radio"
@@ -220,13 +234,23 @@ export default function Signup() {
                     value="admin"
                     checked={role === "admin"}
                     onChange={(e) => setRole(e.target.value)}
+                    className="h-4 w-4 accent-primary shrink-0"
                   />
-                  <span>Admin</span>
+
+                  <span className="text-sm text-on-surface dark:text-surface">
+                    Admin
+                  </span>
                 </label>
 
+                {/* Manager */}
                 <label
                   htmlFor="role-manager"
-                  className="flex items-center gap-2 text-on-surface dark:text-surface cursor-pointer"
+                  className={`flex items-center gap-3 rounded-lg border p-3 cursor-pointer transition-all
+        ${
+          role === "manager"
+            ? "border-primary bg-primary/10 ring-1 ring-primary"
+            : "border-outline-variant hover:bg-surface-container"
+        }`}
                 >
                   <input
                     type="radio"
@@ -235,8 +259,12 @@ export default function Signup() {
                     value="manager"
                     checked={role === "manager"}
                     onChange={(e) => setRole(e.target.value)}
+                    className="h-4 w-4 accent-primary shrink-0"
                   />
-                  <span>Manager</span>
+
+                  <span className="text-sm text-on-surface dark:text-surface">
+                    Manager
+                  </span>
                 </label>
               </div>
             </div>
